@@ -26,7 +26,7 @@ export const fetchFavoriteCars = createAsyncThunk(
     //   }
     // );
     const response = await fetch(
-      `https://car1.dostenterprises.com/saveCar/GetByUser?userId=${UserId}`,
+      `https://car5.dostenterprises.com/saveCar/GetByUser?userId=${UserId}`,
       {
         method: "GET",
         headers: headers,

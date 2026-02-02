@@ -27,7 +27,7 @@ export const WebSocketProvider = ({ children }) => {
   //   );
   useEffect(() => {
     const socket = new SockJS(
-      "https://car1.dostenterprises.com/Aucbidding"
+      "https://car5.dostenterprises.com/Aucbidding"
     );
     const stompClient = new Client({
       webSocketFactory: () => socket,
