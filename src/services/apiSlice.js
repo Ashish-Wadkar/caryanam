@@ -8,7 +8,7 @@ export const apiSlice = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     // baseUrl: "https://caryanamindia.prodchunca.in.net",
-    baseUrl: "https://car5.dostenterprises.com",  
+    baseUrl: "https://api8081.dostenterprises.com",  
     prepareHeaders: (headers, { getState }) => {
       // console.log(headers, "prepareHeaders");
       // console.log(getState().auth.token);

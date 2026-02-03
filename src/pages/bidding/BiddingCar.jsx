@@ -18,7 +18,7 @@ const BiddingCar = () => {
   //   );
   useEffect(() => {
     const socket = new SockJS(
-      "https://car5.dostenterprises.com/Aucbidding"
+      "https://api8081.dostenterprises.com/Aucbidding"
     );
     const stompClient = new Client({
       webSocketFactory: () => socket,
