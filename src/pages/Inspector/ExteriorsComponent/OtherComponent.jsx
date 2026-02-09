@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   MenuItem,
   FormControl,
@@ -12,48 +12,50 @@ import {
   Button,
   Modal,
   makeStyles,
-  
-} from '@material-ui/core';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import UploadImage4 from '../../../ui/UploadImageComponents/UploadImage4';
-import { ToastContainer } from 'react-toastify';
+} from "@material-ui/core";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import UploadImage4 from "../../../ui/UploadImageComponents/UploadImage4";
+import { ToastContainer } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    outline: 'none',
-    maxWidth: '90%',
-    maxHeight: '90%',
+    outline: "none",
+    maxWidth: "90%",
+    maxHeight: "90%",
   },
   image: {
-    maxWidth: '100%',
-    maxHeight: '100%',
-    objectFit: 'contain',
+    maxWidth: "100%",
+    maxHeight: "100%",
+    objectFit: "contain",
   },
 }));
 
-const 
-OtherComponent = ({  handleCameraModal, 
-  userRole, 
-  handleCaptureImage, 
-  handleSubmitWithoutImage, 
-  data, 
-  formData, 
-  setFormData, 
-  handleFileChange, 
-  uploadedImages, 
+const OtherComponent = ({
+  handleCameraModal,
+  userRole,
+  handleCaptureImage,
+  handleSubmitWithoutImage,
+  data,
+  formData,
+  setFormData,
+  handleFileChange,
+  uploadedImages,
   setUploadedImages,
   captureModalOpen,
   setCaptureModalOpen,
   selectedLable,
-  handleChange,handleImageClick,fileInputRef }) => {
+  handleChange,
+  handleImageClick,
+  fileInputRef,
+}) => {
   const classes = useStyles();
 
   const [openModal, setOpenModal] = useState(false);
@@ -63,46 +65,64 @@ OtherComponent = ({  handleCameraModal,
     // Pre-fill form data and uploaded images based on API data
     data?.object.map((item) => {
       switch (item.subtype) {
-       
         case "HeadLightSupport":
           setFormData((prev) => ({ ...prev, HeadLightSupport: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, HeadLightSupports: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            HeadLightSupports: item.documentLink,
+          }));
           break;
         case "RadiatorSupport":
           setFormData((prev) => ({ ...prev, RadiatorSupport: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, RadiatorSupports: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            RadiatorSupports: item.documentLink,
+          }));
           break;
         case "AlloyWheel":
           setFormData((prev) => ({ ...prev, AlloyWheel: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, AlloyWheels: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            AlloyWheels: item.documentLink,
+          }));
           break;
-          case "CarPoolingon":
-            setFormData((prev) => ({ ...prev, CarPoolingon: item.comment }));
-            setUploadedImages((prev) => ({ ...prev, CarPoolingon: item.documentLink }));
-            break;
-            
-            case "LHSRunningBorder":
-              setFormData((prev) => ({ ...prev, LHSRunningBorder: item.comment }));
-              setUploadedImages((prev) => ({ ...prev, LHSRunningBorder: item.documentLink }));
-              break;
+        case "CarPoolingon":
+          setFormData((prev) => ({ ...prev, CarPoolingon: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            CarPoolingon: item.documentLink,
+          }));
+          break;
 
-              case "RHSRunningBorder":
-              setFormData((prev) => ({ ...prev, RHSRunningBorder: item.comment }));
-              setUploadedImages((prev) => ({ ...prev, RHSRunningBorder: item.documentLink }));
-              break;
+        case "LHSRunningBorder":
+          setFormData((prev) => ({ ...prev, LHSRunningBorder: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            LHSRunningBorder: item.documentLink,
+          }));
+          break;
 
-              case "UpperCrossMember":
-                setFormData((prev) => ({ ...prev, UpperCrossMember: item.comment }));
-                setUploadedImages((prev) => ({ ...prev, UpperCrossMember: item.documentLink }));
-                break;
+        case "RHSRunningBorder":
+          setFormData((prev) => ({ ...prev, RHSRunningBorder: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            RHSRunningBorder: item.documentLink,
+          }));
+          break;
+
+        case "UpperCrossMember":
+          setFormData((prev) => ({ ...prev, UpperCrossMember: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            UpperCrossMember: item.documentLink,
+          }));
+          break;
 
         default:
           break;
       }
     });
   }, [data]);
-
-
 
   // const handleImageClick = (image) => {
   //   setSelectedImage(image);
@@ -155,20 +175,20 @@ OtherComponent = ({  handleCameraModal,
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("HeadLightSupport")}
               size="small"
@@ -220,20 +240,20 @@ OtherComponent = ({  handleCameraModal,
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("RadiatorSupport")}
               size="small"
@@ -284,20 +304,20 @@ OtherComponent = ({  handleCameraModal,
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("AlloyWheel")}
               size="small"
@@ -343,20 +363,20 @@ OtherComponent = ({  handleCameraModal,
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("CarPoolingon")}
               size="small"
@@ -407,20 +427,20 @@ OtherComponent = ({  handleCameraModal,
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("LHSRunningBorder")}
               size="small"
@@ -470,20 +490,20 @@ OtherComponent = ({  handleCameraModal,
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("RHSRunningBorder")}
               size="small"
@@ -534,20 +554,20 @@ OtherComponent = ({  handleCameraModal,
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("UpperCrossMember")}
               size="small"
