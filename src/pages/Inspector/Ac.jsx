@@ -323,19 +323,7 @@ const Ac = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -350,7 +338,6 @@ const Ac = ({ setCheckstep }) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("ACCooling")}
               size="small"
@@ -397,19 +384,7 @@ const Ac = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -424,7 +399,6 @@ const Ac = ({ setCheckstep }) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Heater")}
               size="small"
@@ -471,19 +445,7 @@ const Ac = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -498,7 +460,6 @@ const Ac = ({ setCheckstep }) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("ClimateControlAC")}
               size="small"
@@ -542,19 +503,7 @@ const Ac = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -569,7 +518,6 @@ const Ac = ({ setCheckstep }) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("AcVent")}
               size="small"

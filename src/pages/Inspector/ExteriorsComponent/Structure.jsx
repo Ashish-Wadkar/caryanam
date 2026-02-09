@@ -187,19 +187,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -214,7 +202,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("CowlTop")}
               size="small"
@@ -268,19 +255,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -295,7 +270,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("BootFloor")}
               size="small"
@@ -350,19 +324,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -377,7 +339,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RightApronLEG")}
               size="small"
@@ -432,19 +393,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -459,7 +408,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LeftApronLEG")}
               size="small"
@@ -514,19 +462,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -541,7 +477,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RightApron")}
               size="small"
@@ -596,19 +531,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -623,7 +546,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LeftApron")}
               size="small"
@@ -679,19 +601,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -706,7 +616,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LeftPillar")}
               size="small"
@@ -762,19 +671,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -789,7 +686,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LeftPillarA")}
               size="small"
@@ -846,19 +742,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -873,7 +757,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LeftPillarB")}
               size="small"
@@ -930,19 +813,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -957,7 +828,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LeftPillarC")}
               size="small"
@@ -1013,19 +883,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -1040,7 +898,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RightPillar")}
               size="small"
@@ -1096,19 +953,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -1123,7 +968,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RightPillarA")}
               size="small"
@@ -1179,19 +1023,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -1206,7 +1038,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RightPillarB")}
               size="small"
@@ -1263,19 +1094,7 @@ const Structure = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -1290,7 +1109,6 @@ const Structure = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RightPillarC")}
               size="small"

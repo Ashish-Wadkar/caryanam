@@ -318,19 +318,7 @@ const Interior = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -345,7 +333,6 @@ const Interior = ({ setCheckstep }) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LeatherSeat")}
               size="small"
@@ -390,19 +377,7 @@ const Interior = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -417,7 +392,6 @@ const Interior = ({ setCheckstep }) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Odometer")}
               size="small"
@@ -467,19 +441,7 @@ const Interior = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -494,7 +456,6 @@ const Interior = ({ setCheckstep }) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("CabinFloor")}
               size="small"
@@ -543,19 +504,7 @@ const Interior = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -570,7 +519,6 @@ const Interior = ({ setCheckstep }) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Dashboard")}
               size="small"

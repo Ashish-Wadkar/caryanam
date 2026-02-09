@@ -343,19 +343,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -370,7 +358,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Engine")}
               size="small"
@@ -416,19 +403,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -443,7 +418,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("EngineMounting")}
               size="small"
@@ -490,19 +464,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -517,7 +479,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("EngineSound")}
               size="small"
@@ -565,19 +526,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -592,7 +541,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Exhaustsmoke")}
               size="small"
@@ -638,19 +586,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -665,7 +601,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Gearbox")}
               size="small"
@@ -710,19 +645,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -737,7 +660,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Engineoil")}
               size="small"
@@ -784,19 +706,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -811,7 +721,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Battery")}
               size="small"
@@ -856,19 +765,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -883,7 +780,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Coolant")}
               size="small"
@@ -929,19 +825,7 @@ const Engine = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -956,7 +840,6 @@ const Engine = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Clutch")}
               size="small"

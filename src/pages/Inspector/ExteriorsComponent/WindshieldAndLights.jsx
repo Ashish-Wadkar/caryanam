@@ -161,19 +161,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -188,7 +176,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Windshield")}
               size="small"
@@ -238,19 +225,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -265,7 +240,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("FrontWindshield")}
               size="small"
@@ -316,19 +290,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -343,7 +305,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RearWindshield")}
               size="small"
@@ -396,19 +357,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -423,7 +372,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("Light")}
               size="small"
@@ -473,19 +421,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -500,7 +436,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("FrontBumper")}
               size="small"
@@ -551,19 +486,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -578,7 +501,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RearBumper")}
               size="small"
@@ -629,19 +551,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -656,7 +566,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LHSHeadlight")}
               size="small"
@@ -707,19 +616,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -734,7 +631,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RHSHeadlight")}
               size="small"
@@ -785,19 +681,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -812,7 +696,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LHSTaillight")}
               size="small"
@@ -863,19 +746,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -890,7 +761,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RHSTaillight")}
               size="small"
@@ -941,19 +811,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -968,7 +826,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LHSORVM")}
               size="small"
@@ -1019,19 +876,7 @@ const WindshieldAndLights = ({ handleCameraModal,
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -1046,7 +891,6 @@ const WindshieldAndLights = ({ handleCameraModal,
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RHSORVM")}
               size="small"

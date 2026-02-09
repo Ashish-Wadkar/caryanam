@@ -306,19 +306,7 @@ const Steering = ({ setCheckstep }) => {
               >
                 Submit Without image
               </Button>
-              {userRole === "INSPECTOR" ? (
-                <div className="mt-3 ml-5">
-                  <Button
-                    onClick={() => handleCameraModal("ABSs")}
-                    size="small"
-                    variant="contained"
-                    color="success"
-                  >
-                    Open Camera
-                  </Button>
-                </div>
-              ) : (
-                <label
+              <label
                   htmlFor="upload-MusicSystems"
                   onClick={handleCaptureImage}
                   className="cursor-pointer flex items-center"
@@ -333,7 +321,6 @@ const Steering = ({ setCheckstep }) => {
                   <CloudUploadIcon />
                   <span className="ml-2">Upload Image</span>
                 </label>
-              )}
               <Button
                 onClick={() => handleReset("Steering")}
                 size="small"
@@ -383,19 +370,7 @@ const Steering = ({ setCheckstep }) => {
               >
                 Submit Without image
               </Button>
-              {userRole === "INSPECTOR" ? (
-                <div className="mt-3 ml-5">
-                  <Button
-                    onClick={() => handleCameraModal("ABSs")}
-                    size="small"
-                    variant="contained"
-                    color="success"
-                  >
-                    Open Camera
-                  </Button>
-                </div>
-              ) : (
-                <label
+              <label
                   htmlFor="upload-MusicSystems"
                   onClick={handleCaptureImage}
                   className="cursor-pointer flex items-center"
@@ -410,7 +385,6 @@ const Steering = ({ setCheckstep }) => {
                   <CloudUploadIcon />
                   <span className="ml-2">Upload Image</span>
                 </label>
-              )}
               <Button
                 onClick={() => handleReset("Brake")}
                 size="small"
@@ -460,19 +434,7 @@ const Steering = ({ setCheckstep }) => {
               >
                 Submit Without image
               </Button>
-              {userRole === "INSPECTOR" ? (
-                <div className="mt-3 ml-5">
-                  <Button
-                    onClick={() => handleCameraModal("ABSs")}
-                    size="small"
-                    variant="contained"
-                    color="success"
-                  >
-                    Open Camera
-                  </Button>
-                </div>
-              ) : (
-                <label
+              <label
                   htmlFor="upload-MusicSystems"
                   onClick={handleCaptureImage}
                   className="cursor-pointer flex items-center"
@@ -487,7 +449,6 @@ const Steering = ({ setCheckstep }) => {
                   <CloudUploadIcon />
                   <span className="ml-2">Upload Image</span>
                 </label>
-              )}
               <Button
                 onClick={() => handleReset("Suspension")}
                 size="small"

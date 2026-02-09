@@ -15,8 +15,6 @@ import {
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useParams } from 'react-router-dom';
 import { useAddBiddingCarWithoutImageMutation, useGetInspectionReportQuery, useInspectionReportMutation, useInspectionReportNewMutation } from '../../../services/inspectorapi';
-import Cookies from "js-cookie";
-import { jwtDecode } from 'jwt-decode';
 import UploadImage4 from '../../../ui/UploadImageComponents/UploadImage4';
 import {  toast } from 'react-toastify';
 
@@ -63,7 +61,7 @@ const Tyre = ({setCheckstep}) => {
 
   const [addBiddingCarWithoutImage] = useAddBiddingCarWithoutImageMutation()
   const [captureModalOpen, setCaptureModalOpen] = useState(false);
-  const [selectedLable ,setSelectedLable] = useState("");
+  // const [selectedLable ,setSelectedLable] = useState("");
   const [lables, setLables] = useState("");
   const [selectfiled, setSelectfiled] = useState("")
 
@@ -74,15 +72,6 @@ const Tyre = ({setCheckstep}) => {
     RHSRearTyres: null,
     SpareTyres: null
   });
-  const token = Cookies.get("token");
-  let jwtDecodes;
-  if (token) {
-    jwtDecodes = jwtDecode(token);
-  }
-
-  const userRole = token ? jwtDecodes?.authorities[0] : null;
-
- 
   useEffect(() => {
     // Pre-fill form data and uploaded images based on API data
     data?.object.map((item) => {
@@ -265,11 +254,6 @@ const Tyre = ({setCheckstep}) => {
       }
     };
 
-  const handleCameraModal = (key) => {
-    setCaptureModalOpen(true);
-    setSelectedLable(key)
-  }
-
   const handleReset = (fieldName) => {
     setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
     setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null })); // Reset corresponding uploaded image
@@ -312,19 +296,7 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -339,7 +311,6 @@ const Tyre = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LHSFrontTyre")}
               size="small"
@@ -388,19 +359,7 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -415,7 +374,6 @@ const Tyre = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RHSFrontTyre")}
               size="small"
@@ -464,19 +422,7 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -491,7 +437,6 @@ const Tyre = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("LHSRearTyre")}
               size="small"
@@ -540,19 +485,7 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -567,7 +500,6 @@ const Tyre = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("RHSRearTyre")}
               size="small"
@@ -616,19 +548,7 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            {userRole === "INSPECTOR" ? (
-              <div className="mt-3 ml-5">
-                <Button
-                  onClick={() => handleCameraModal("ABSs")}
-                  size="small"
-                  variant="contained"
-                  color="success"
-                >
-                  Open Camera
-                </Button>
-              </div>
-            ) : (
-              <label
+            <label
                 htmlFor="upload-MusicSystems"
                 onClick={handleCaptureImage}
                 className="cursor-pointer flex items-center"
@@ -643,7 +563,6 @@ const Tyre = ({setCheckstep}) => {
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
               </label>
-            )}
             <Button
               onClick={() => handleReset("SpareTyre")}
               size="small"
@@ -681,7 +600,7 @@ const Tyre = ({setCheckstep}) => {
             onClose={() => setCaptureModalOpen(false)}
             onCapture={handleCaptureImage}
             handleCaptureImage={handleFileChange}
-            selectfiled={selectedLable}
+            // selectfiled={selectedLable}
           />
         </div>
       </Modal>
