@@ -698,8 +698,9 @@ export default function BiddingAddCar2() {
                   <option>Petrol</option>
                   <option>Diesel</option>
                   <option>Electric</option>
-                  <option>CNG</option>
                   <option>Petrol+CNG</option>
+                  <option>Company-Fitted CNG</option>
+                  <option> After Market CNG</option>
                 </select>
               </div>
             </div>

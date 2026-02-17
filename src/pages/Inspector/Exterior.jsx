@@ -3,19 +3,32 @@
 
 import WindshieldAndLights from "./ExteriorsComponent/WindshieldAndLights";
 import Tyre from "./ExteriorsComponent/Tyre";
-import { useEffect, useRef, useState  } from 'react';
-import { MenuItem, FormControl, Select, InputLabel, Grid, Typography,Button, Modal, makeStyles } from '@material-ui/core';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { useGetInspectionReportQuery, useInspectionReportMutation } from '../../services/inspectorapi';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from "react";
+import {
+  MenuItem,
+  FormControl,
+  Select,
+  InputLabel,
+  Grid,
+  Typography,
+  Button,
+  Modal,
+  makeStyles,
+} from "@material-ui/core";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import {
+  useGetInspectionReportQuery,
+  useInspectionReportMutation,
+} from "../../services/inspectorapi";
+import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
-import { jwtDecode } from 'jwt-decode';
-import UploadImage4 from '../../ui/UploadImageComponents/UploadImage4';
-import { useAddBiddingCarWithoutImageMutation } from "../../services/inspectorapi"
-import OtherComponent from "./ExteriorsComponent/OtherComponent"
-import Structure from "./ExteriorsComponent/Structure"
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { jwtDecode } from "jwt-decode";
+import UploadImage4 from "../../ui/UploadImageComponents/UploadImage4";
+import { useAddBiddingCarWithoutImageMutation } from "../../services/inspectorapi";
+import OtherComponent from "./ExteriorsComponent/OtherComponent";
+import Structure from "./ExteriorsComponent/Structure";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -38,14 +51,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Exterior = ({setCheckstep}) => {
+const Exterior = ({ setCheckstep }) => {
   const classes = useStyles();
   const { beadingCarId } = useParams();
-  
-  const { data,refetch } = useGetInspectionReportQuery({ beadingCarId, docType: "Exterior" });
-  console.log(data)
 
-const [formData, setFormData] = useState({
+  const { data, refetch } = useGetInspectionReportQuery({
+    beadingCarId,
+    docType: "Exterior",
+  });
+  console.log(data);
+
+  const [formData, setFormData] = useState({
     BonnetHood: [],
     RightDoorFront: [],
     LeftDoorFront: [],
@@ -72,32 +88,42 @@ const [formData, setFormData] = useState({
     HeadLightSupport: [],
     RadiatorSupport: [],
     AlloyWheel: [],
-    CowlTop:[],
-    BootFloor:[],
-    RightApronLEG:[],
-    LeftApronLEG : [],
-    RightApron : [],
-    LeftApron : [],
-    LeftPillar : [],
-    RightPillar : [],
+    CowlTop: [],
+    BootFloor: [],
+    RightApronLEG: [],
+    LeftApronLEG: [],
+    RightApron: [],
+    LeftApron: [],
+    LeftPillar: [],
+    RightPillar: [],
     RightPillarA: [],
-    RightPillarB : [],
-    RightPillarC : [],
-    LeftFender : [],
+    RightPillarB: [],
+    RightPillarC: [],
+    LeftFender: [],
     LeftPillarA: [],
     LeftPillarB: [],
-    LeftPillarC:[],
-    FrontWindshield:[],
-    RearWindshield:[],
-    LHSORVM :[],
-    RHSORVM :[],
-    CarPoolingon :[],
-    LHSRunningBorder:[],
-    RHSRunningBorder :[],
-    UpperCrossMember:[],
+    LeftPillarC: [],
+    FrontWindshield: [],
+    RearWindshield: [],
+    LHSORVM: [],
+    RHSORVM: [],
+    customLHSORVM: "",
+    customRHSORVM: "",
+    CarPoolingon: [],
+    customCARPOOLING: "",
+    LHSRunningBorder: [],
+    RHSRunningBorder: [],
+    UpperCrossMember: [],
+    customUpperCM:"",
+    //new added
+    UnderBody: [],
+    RightSide: [],
+    LeftSide: [],
+    RearSide: [],
+    EngineMotor: [],
   });
 
- const [uploadedImages, setUploadedImages] = useState({
+  const [uploadedImages, setUploadedImages] = useState({
     BonnetHoods: null,
     RightDoorFronts: null,
     LeftDoorFronts: null,
@@ -114,8 +140,8 @@ const [formData, setFormData] = useState({
     RHSRearTyres: null,
     SpareTyres: null,
     Windshields: null,
-    FrontWindshield:null,
-    RearWindshield:null,
+    FrontWindshield: null,
+    RearWindshield: null,
     Lights: null,
     FrontBumpers: null,
     RearBumpers: null,
@@ -126,7 +152,7 @@ const [formData, setFormData] = useState({
     HeadLightSupports: null,
     RadiatorSupports: null,
     AlloyWheels: null,
-    CowlTops : null,
+    CowlTops: null,
     BootFloors: null,
     RightApronLEGs: null,
     LeftApronLEGs: null,
@@ -137,45 +163,69 @@ const [formData, setFormData] = useState({
     RightPillarA: null,
     RightPillarB: null,
     RightPillarC: null,
-    LeftFender : null,
+    LeftFender: null,
     LeftPillarA: null,
-    LeftPillarB:null,
-    LeftPillarC:null,
-    LHSORVM:null,
-    RHSORVM:null,
-    CarPoolingon :null,
-    LHSRunningBorder:null,
-    RHSRunningBorder :null,
-    UpperCrossMember:null,
+    LeftPillarB: null,
+    LeftPillarC: null,
+    LHSORVM: null,
+    RHSORVM: null,
+    CarPoolingon: null,
+    LHSRunningBorder: null,
+    RHSRunningBorder: null,
+    UpperCrossMember: null,
+    //add value
+    UnderBody: null,
+    RightSide: null,
+    LeftSide: null,
+    RearSide: null,
+    EngineMotor: null,
   });
-  
+
   useEffect(() => {
     // Pre-fill form data and uploaded images based on API data
     data?.object.map((item) => {
       switch (item.subtype) {
         case "BonnetHood":
           setFormData((prev) => ({ ...prev, BonnetHood: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, BonnetHoods: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            BonnetHoods: item.documentLink,
+          }));
           break;
         case "RightDoorFront":
           setFormData((prev) => ({ ...prev, RightDoorFront: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, RightDoorFronts: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            RightDoorFronts: item.documentLink,
+          }));
           break;
         case "LeftDoorFront":
           setFormData((prev) => ({ ...prev, LeftDoorFront: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, LeftDoorFronts: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            LeftDoorFronts: item.documentLink,
+          }));
           break;
         case "RightFender":
           setFormData((prev) => ({ ...prev, RightFender: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, RightFenders: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            RightFenders: item.documentLink,
+          }));
           break;
         case "LeftQuarterPanel":
           setFormData((prev) => ({ ...prev, LeftQuarterPanel: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, LeftQuarterPanels: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            LeftQuarterPanels: item.documentLink,
+          }));
           break;
         case "RightQuarterPanel":
           setFormData((prev) => ({ ...prev, RightQuarterPanel: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, RightQuarterPanels: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            RightQuarterPanels: item.documentLink,
+          }));
           break;
         case "Roof":
           setFormData((prev) => ({ ...prev, Roof: item.comment }));
@@ -183,31 +233,79 @@ const [formData, setFormData] = useState({
           break;
         case "DickyDoor":
           setFormData((prev) => ({ ...prev, DickyDoor: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, DickyDoors: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            DickyDoors: item.documentLink,
+          }));
           break;
         case "LeftDoorRear":
           setFormData((prev) => ({ ...prev, LeftDoorRear: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, LeftDoorRears: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            LeftDoorRears: item.documentLink,
+          }));
           break;
         case "RightDoorRear":
           setFormData((prev) => ({ ...prev, RightDoorRear: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, RightDoorRears: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            RightDoorRears: item.documentLink,
+          }));
           break;
-          case "LeftFender":
+        case "LeftFender":
           setFormData((prev) => ({ ...prev, LeftFender: item.comment }));
-          setUploadedImages((prev) => ({ ...prev, LeftFender: item.documentLink }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            LeftFender: item.documentLink,
+          }));
           break;
+        case "UnderBody":
+          setFormData((prev) => ({ ...prev, UnderBody: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            UnderBody: item.documentLink,
+          }));
+          break;
+        case "RightSide":
+          setFormData((prev) => ({ ...prev, RightSide: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            RightSide: item.documentLink,
+          }));
+          break;
+        case "LeftSide":
+          setFormData((prev) => ({ ...prev, LeftSide: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            LeftSide: item.documentLink,
+          }));
+          break;
+        case "RearSide":
+          setFormData((prev) => ({ ...prev, RearSide: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            RearSide: item.documentLink,
+          }));
+          break;
+        case "EngineMotor":
+          setFormData((prev) => ({ ...prev, EngineMotor: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            EngineMotor: item.documentLink,
+          }));
+          break;
+
         default:
           break;
       }
     });
   }, [data]);
   const [inspectionReport] = useInspectionReportMutation();
-  const [addBiddingCarWithoutImage] = useAddBiddingCarWithoutImageMutation()
+  const [addBiddingCarWithoutImage] = useAddBiddingCarWithoutImageMutation();
   const [captureModalOpen, setCaptureModalOpen] = useState(false);
-  const [selectedLable ,setSelectedLable] = useState("");
+  const [selectedLable, setSelectedLable] = useState("");
   const [lables, setLables] = useState("");
-  const [selectfiled, setSelectfiled] = useState("")
+  const [selectfiled, setSelectfiled] = useState("");
 
   const token = Cookies.get("token");
   let jwtDecodes;
@@ -216,7 +314,6 @@ const [formData, setFormData] = useState({
   }
 
   const userRole = token ? jwtDecodes?.authorities[0] : null;
-
 
   const handleFileChange = async (event, fieldName, imgPreview = "") => {
     imgPreview;
@@ -230,68 +327,96 @@ const [formData, setFormData] = useState({
     } else {
       file = event.target.files[0];
     }
-  
+
     if (!file) return;
-  
+
     const formDataToSend = new FormData();
-    formDataToSend.append('image', file);
-  
+    formDataToSend.append("image", file);
+
     const reader = new FileReader();
     reader.onload = async () => {
       imageData = reader.result;
       // console.log(imageData);
       setFormData({ ...formData, [fieldName]: imageData });
       if (lables) {
-      const inspectionData = {
-        documentType: "InspectionReport",
-        beadingCarId: beadingCarId,
-        doc: "",
-        doctype: "Exterior",
-        subtype: lables,
-        comment: selectfiled,
-      };
-  
-      try {
-        const res = await inspectionReport({ inspectionData, formDataToSend });
-        refetch()
-        
-        if (res.data?.message === "success") {
-          toast.success("Data Uploaded", { autoClose: 500 });
-          setLables('');
-          setSelectfiled(''); 
-        } else {
-          toast.error("Data Upload failed", { autoClose: 500 });
+        const inspectionData = {
+          documentType: "InspectionReport",
+          beadingCarId: beadingCarId,
+          doc: "",
+          doctype: "Exterior",
+          subtype: lables,
+          comment: selectfiled,
+        };
+
+        try {
+          const res = await inspectionReport({
+            inspectionData,
+            formDataToSend,
+          });
+          refetch();
+
+          if (res.data?.message === "success") {
+            toast.success("Data Uploaded", { autoClose: 500 });
+            setLables("");
+            setSelectfiled("");
+          } else {
+            toast.error("Data Upload failed", { autoClose: 500 });
+          }
+        } catch (error) {
+          // console.error('Error uploading the file:', error);
+          toast.error("Data not Uploaded", { autoClose: 500 });
         }
-      } catch (error) {
-        // console.error('Error uploading the file:', error);
-        toast.error("Data not Uploaded", { autoClose: 500 });
+      } else {
+        toast.error("Input is required", { autoClose: 2000 });
       }
-    } else {
-      toast.error("Input is required", { autoClose: 2000 });
-    }
     };
     reader.readAsDataURL(file);
   };
-  
-  
+
   const handleSubmitWithoutImage = async () => {
     if (lables) {
+      let finalComment = selectfiled;
+
+      
+      if (lables === "LHSORVM" && selectfiled === "Other") {
+        finalComment = formData.customLHSORVM;
+      }
+
+      if (lables === "RHSORVM" && selectfiled === "Other") {
+        finalComment = formData.customRHSORVM;
+      }
+
+       if (
+      lables === "CarPoolingon" &&
+      selectfiled === "Other"
+    ) {
+      finalComment = formData.customCARPOOLING;
+    }
+
+     
+    if (
+      lables === "UpperCrossMember" &&
+      selectfiled === "Other"
+    ) {
+      finalComment = formData.customUpperCM;
+    }
+
       const formDataToSend1 = new FormData();
-      formDataToSend1.append('beadingCarId', beadingCarId);
-      formDataToSend1.append('doctype', "Exterior");
-      formDataToSend1.append('subtype', lables);
-      formDataToSend1.append('comment', selectfiled);
-      formDataToSend1.append('documentType', "InspectionReport");
-      formDataToSend1.append('doc', "");
-  
+      formDataToSend1.append("beadingCarId", beadingCarId);
+      formDataToSend1.append("doctype", "Exterior");
+      formDataToSend1.append("subtype", lables);
+      formDataToSend1.append("comment", finalComment);
+      formDataToSend1.append("documentType", "InspectionReport");
+      formDataToSend1.append("doc", "");
+
       try {
         const res = await addBiddingCarWithoutImage({ formDataToSend1 });
         refetch();
-        // console.log(res?.data.message);
+
         if (res?.data.message === "success") {
           toast.success("Data Uploaded", { autoClose: 500 });
-          setLables('');
-          setSelectfiled('');
+          setLables("");
+          setSelectfiled("");
         } else {
           toast.error("Data Upload failed", { autoClose: 500 });
         }
@@ -302,13 +427,11 @@ const [formData, setFormData] = useState({
       toast.error("Input is required", { autoClose: 2000 });
     }
   };
-  
 
- 
   const handleCameraModal = (key) => {
     setCaptureModalOpen(true);
-    setSelectedLable(key)
-  }
+    setSelectedLable(key);
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -368,13 +491,16 @@ const [formData, setFormData] = useState({
     formData.CarPoolingon.length > 0 &&
     formData.LHSRunningBorder.length > 0 &&
     formData.RHSRunningBorder.length > 0 &&
-    formData.UpperCrossMember.length > 0
+    formData.UpperCrossMember.length > 0 &&
+    formData.UnderBody.length > 0 &&
+    formData.RightSide.length > 0 &&
+    formData.LeftSide.length > 0 &&
+    formData.RearSide.length > 0 &&
+    formData.EngineMotor.length > 0
   ) {
     setCheckstep(true);
-    
   } else {
     setCheckstep(false);
-    
   }
 
   const fileInputRef = useRef(null);
@@ -385,46 +511,46 @@ const [formData, setFormData] = useState({
     }
   };
 
-  const handleImageClick =  async(event)  => {
+  const handleImageClick = async (event) => {
     // Handle the image upload here
     const file = event.target.files[0];
     const formDataToSend = new FormData();
-    formDataToSend.append('image', file);
-    
+    formDataToSend.append("image", file);
+
     const inspectionData = {
-        documentType: "InspectionReport",
-        beadingCarId: beadingCarId,
-        doc: "",
-        doctype: "Exterior",
-        subtype: lables,
-        comment: selectfiled,
-      };
-  
-      try {
-        const res = await inspectionReport({ inspectionData, formDataToSend });
-        refetch()
-       
-        if (res.data?.message === "success") {
-          toast.success("Data Uploaded", { autoClose: 500 });
-        } else {
-          toast.error("Data Upload failed", { autoClose: 500 });
-        }
-      } catch (error) {
-        // console.error('Error uploading the file:', error);
-        toast.error("Data not Uploaded", { autoClose: 500 });
-      }
+      documentType: "InspectionReport",
+      beadingCarId: beadingCarId,
+      doc: "",
+      doctype: "Exterior",
+      subtype: lables,
+      comment: selectfiled,
     };
 
-     const handleReset = (fieldName) => {
-       setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
-       setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null })); // Reset corresponding uploaded image
-       setLables(""); // Clear labels
-       setSelectfiled(""); // Clear selected field
-     };
- 
-    // if (!data) {
-    //   return <div><p>No Data Available</p></div>
-    // }
+    try {
+      const res = await inspectionReport({ inspectionData, formDataToSend });
+      refetch();
+
+      if (res.data?.message === "success") {
+        toast.success("Data Uploaded", { autoClose: 500 });
+      } else {
+        toast.error("Data Upload failed", { autoClose: 500 });
+      }
+    } catch (error) {
+      // console.error('Error uploading the file:', error);
+      toast.error("Data not Uploaded", { autoClose: 500 });
+    }
+  };
+
+  const handleReset = (fieldName) => {
+    setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
+    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null })); // Reset corresponding uploaded image
+    setLables(""); // Clear labels
+    setSelectfiled(""); // Clear selected field
+  };
+
+  // if (!data) {
+  //   return <div><p>No Data Available</p></div>
+  // }
   return (
     <div className="">
       <Typography variant="h4" className="text-black font-bold pb-5">
@@ -463,20 +589,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("BonnetHood")}
               size="small"
@@ -532,20 +658,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("RightDoorFront")}
               size="small"
@@ -601,20 +727,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("LeftDoorFront")}
               size="small"
@@ -670,20 +796,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("RightFender")}
               size="small"
@@ -739,20 +865,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("LeftQuarterPanel")}
               size="small"
@@ -808,20 +934,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("RightQuarterPanel")}
               size="small"
@@ -879,20 +1005,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("Roof")}
               size="small"
@@ -948,20 +1074,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("DickyDoor")}
               size="small"
@@ -1017,20 +1143,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("LeftDoorRear")}
               size="small"
@@ -1086,20 +1212,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("RightDoorRear")}
               size="small"
@@ -1155,20 +1281,20 @@ const [formData, setFormData] = useState({
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
+              htmlFor="upload-MusicSystems"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
             <Button
               onClick={() => handleReset("LeftFender")}
               size="small"
@@ -1189,6 +1315,335 @@ const [formData, setFormData] = useState({
                 cursor: "pointer",
               }}
               onClick={() => handleImageClick(uploadedImages.LeftFender)}
+            />
+          )}
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth required>
+            <InputLabel>Under Body</InputLabel>
+            <Select
+              required
+              name="UnderBody"
+              value={formData.UnderBody}
+              onChange={handleChange}
+            >
+              <MenuItem value="Ok">Ok</MenuItem>
+              <MenuItem value="Rusted">Rusted</MenuItem>
+              <MenuItem value="Good Condition">Good Condition</MenuItem>
+              <MenuItem value="Damaged">Damaged</MenuItem>
+              <MenuItem value="Repaired">Repaired</MenuItem>
+              <MenuItem value="Scratched">Scratched</MenuItem>
+            </Select>
+          </FormControl>
+          <div className="flex gap-5">
+            <Button
+              onClick={handleSubmitWithoutImage}
+              size="small"
+              variant="contained"
+              color="success"
+              style={{ marginTop: "10px" }}
+            >
+              Submit Without image
+            </Button>
+            <label
+              htmlFor="upload-UnderBody"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button
+              onClick={() => handleReset("UnderBody")}
+              size="small"
+              variant="outlined"
+              color="secondary"
+              style={{ marginTop: "10px" }}
+            >
+              Reset
+            </Button>
+          </div>
+          {uploadedImages.UnderBody && (
+            <img
+              src={uploadedImages.UnderBody}
+              alt="Uploaded"
+              style={{
+                maxWidth: "20%",
+                marginTop: "10px",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(uploadedImages.UnderBody)}
+            />
+          )}
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth required>
+            <InputLabel>Right Side</InputLabel>
+            <Select
+              required
+              name="RightSide"
+              value={formData.RightSide}
+              onChange={handleChange}
+            >
+              <MenuItem value="Ok">Ok</MenuItem>
+              <MenuItem value="Rusted">Rusted</MenuItem>
+              <MenuItem value="Good Condition">Good Condition</MenuItem>
+              <MenuItem value="Damaged">Damaged</MenuItem>
+              <MenuItem value="Repaired">Repaired</MenuItem>
+              <MenuItem value="Scratched">Scratched</MenuItem>
+            </Select>
+          </FormControl>
+          <div className="flex gap-5">
+            <Button
+              onClick={handleSubmitWithoutImage}
+              size="small"
+              variant="contained"
+              color="success"
+              style={{ marginTop: "10px" }}
+            >
+              Submit Without image
+            </Button>
+            <label
+              htmlFor="upload-RightSide"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button
+              onClick={() => handleReset("RightSide")}
+              size="small"
+              variant="outlined"
+              color="secondary"
+              style={{ marginTop: "10px" }}
+            >
+              Reset
+            </Button>
+          </div>
+          {uploadedImages.RightSide && (
+            <img
+              src={uploadedImages.RightSide}
+              alt="Uploaded"
+              style={{
+                maxWidth: "20%",
+                marginTop: "10px",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(uploadedImages.RightSide)}
+            />
+          )}
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth required>
+            <InputLabel>Left Side</InputLabel>
+            <Select
+              required
+              name="LeftSide"
+              value={formData.LeftSide}
+              onChange={handleChange}
+            >
+              <MenuItem value="Ok">Ok</MenuItem>
+              <MenuItem value="Rusted">Rusted</MenuItem>
+              <MenuItem value="Good Condition">Good Condition</MenuItem>
+              <MenuItem value="Damaged">Damaged</MenuItem>
+              <MenuItem value="Repaired">Repaired</MenuItem>
+              <MenuItem value="Scratched">Scratched</MenuItem>
+            </Select>
+          </FormControl>
+          <div className="flex gap-5">
+            <Button
+              onClick={handleSubmitWithoutImage}
+              size="small"
+              variant="contained"
+              color="success"
+              style={{ marginTop: "10px" }}
+            >
+              Submit Without image
+            </Button>
+            <label
+              htmlFor="upload-LeftSide"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button
+              onClick={() => handleReset("LeftSide")}
+              size="small"
+              variant="outlined"
+              color="secondary"
+              style={{ marginTop: "10px" }}
+            >
+              Reset
+            </Button>
+          </div>
+          {uploadedImages.LeftSide && (
+            <img
+              src={uploadedImages.LeftSide}
+              alt="Uploaded"
+              style={{
+                maxWidth: "20%",
+                marginTop: "10px",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(uploadedImages.LeftSide)}
+            />
+          )}
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth required>
+            <InputLabel>Rear Side</InputLabel>
+            <Select
+              required
+              name="RearSide"
+              value={formData.RearSide}
+              onChange={handleChange}
+            >
+              <MenuItem value="Ok">Ok</MenuItem>
+              <MenuItem value="Rusted">Rusted</MenuItem>
+              <MenuItem value="Good Condition">Good Condition</MenuItem>
+              <MenuItem value="Damaged">Damaged</MenuItem>
+              <MenuItem value="Repaired">Repaired</MenuItem>
+              <MenuItem value="Scratched">Scratched</MenuItem>
+            </Select>
+          </FormControl>
+          <div className="flex gap-5">
+            <Button
+              onClick={handleSubmitWithoutImage}
+              size="small"
+              variant="contained"
+              color="success"
+              style={{ marginTop: "10px" }}
+            >
+              Submit Without image
+            </Button>
+            <label
+              htmlFor="upload-RearSide"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button
+              onClick={() => handleReset("RearSide")}
+              size="small"
+              variant="outlined"
+              color="secondary"
+              style={{ marginTop: "10px" }}
+            >
+              Reset
+            </Button>
+          </div>
+          {uploadedImages.RearSide && (
+            <img
+              src={uploadedImages.RearSide}
+              alt="Uploaded"
+              style={{
+                maxWidth: "20%",
+                marginTop: "10px",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(uploadedImages.RearSide)}
+            />
+          )}
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth required>
+            <InputLabel>Engine Motor</InputLabel>
+            <Select
+              required
+              name="EngineMotor"
+              value={formData.EngineMotor}
+              onChange={handleChange}
+            >
+              <MenuItem value="Ok">Ok</MenuItem>
+              <MenuItem value="Rusted">Rusted</MenuItem>
+              <MenuItem value="Good Condition">Good Condition</MenuItem>
+              <MenuItem value="Damaged">Damaged</MenuItem>
+              <MenuItem value="Repaired">Repaired</MenuItem>
+            </Select>
+          </FormControl>
+          <div className="flex gap-5">
+            <Button
+              onClick={handleSubmitWithoutImage}
+              size="small"
+              variant="contained"
+              color="success"
+              style={{ marginTop: "10px" }}
+            >
+              Submit Without image
+            </Button>
+            <label
+              htmlFor="upload-EngineMotor"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button
+              onClick={() => handleReset("EngineMotor")}
+              size="small"
+              variant="outlined"
+              color="secondary"
+              style={{ marginTop: "10px" }}
+            >
+              Reset
+            </Button>
+          </div>
+          {uploadedImages.EngineMotor && (
+            <img
+              src={uploadedImages.EngineMotor}
+              alt="Uploaded"
+              style={{
+                maxWidth: "20%",
+                marginTop: "10px",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(uploadedImages.EngineMotor)}
             />
           )}
         </Grid>

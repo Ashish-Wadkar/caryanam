@@ -482,7 +482,7 @@ export default function BiddingAddCar() {
                   }
                 >
                   <option>Fuel Type</option>
-                  {["Petrol", "Diesel", "CNG", "Electric", "Hybrid"].map(
+                  {["Petrol", "Diesel", "CNG", "Electric", "Hybrid", "Company-Fitted CNG", "After Market CNG"].map(
                     (fuel) => (
                       <option key={fuel} value={fuel}>
                         {fuel}

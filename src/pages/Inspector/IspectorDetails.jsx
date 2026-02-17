@@ -86,7 +86,8 @@ const navigate = useNavigate()
       <ToastContainer />
       <forms className="w-full border border-gray-500 px-2 py-2 rounded-md mt-2 mb-2">
         <div className="mt-5">
-          <p className="text-3xl font-semibold">Edit Dealer Details </p>
+          <p className="text-3xl font-semibold">Edit
+             Dealer Details </p>
         </div>
         <div className="mt-5">
           <Inputs

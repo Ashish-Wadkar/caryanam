@@ -695,7 +695,8 @@ export default function AddDealerCar() {
                   <option>Petrol</option>
                   <option>Diesel</option>
                   <option>Electric</option>
-                  <option>CNG</option>
+                  <option>Company-Fitted CNG</option>
+                <option> After Market CNG</option>
                   <option>Petrol+CNG</option>
                 </select>
               </div>

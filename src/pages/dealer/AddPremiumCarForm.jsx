@@ -71,16 +71,16 @@ export default function AddPremiumCarForm() {
     { brand: selectedBrand, variant: selectedModel },
     {
       skip: !selectedBrand || !selectedModel,
-    }
+    },
   );
 
   const filteredColors = colors
     .filter(
       (color) =>
-        color && color.toLowerCase().includes((inputValue || "").toLowerCase())
+        color && color.toLowerCase().includes((inputValue || "").toLowerCase()),
     ) // Ensure both color and inputValue are strings
     .sort();
-    // const { carType } = useParams();
+  // const { carType } = useParams();
   const [carRegisterPremium] = useCarRegisterPremiumMutation();
   //  const [mult, setMult] = React.useState([]);
   const [formData, setFormData] = useState({
@@ -188,11 +188,11 @@ export default function AddPremiumCarForm() {
       data.carInsuranceDate = formData.insurancedate;
       data.carInsuranceType = formData.carInsuranceType;
     }
-    console.log( "resquest body " , data);
+    console.log("resquest body ", data);
     try {
       const res = await carRegisterPremium(data);
-      
-      console.log("api respons" , res);
+
+      console.log("api respons", res);
       if (res?.data?.status === "success") {
         toast.success("Car Added");
         setTimeout(() => {
@@ -682,7 +682,8 @@ export default function AddPremiumCarForm() {
                   <option>Petrol</option>
                   <option>Diesel</option>
                   <option>Electric</option>
-                  <option>CNG</option>
+                  <option>Company-Fitted CNG</option>
+                  <option> After Market CNG</option>
                   <option>Petrol+CNG</option>
                 </select>
               </div>

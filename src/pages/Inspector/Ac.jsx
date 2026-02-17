@@ -96,7 +96,7 @@ const Ac = ({ setCheckstep }) => {
       imageData = file;
     } else {
       file = event.target.files[0];
-    }
+    }  
 
     if (!file) return;
 

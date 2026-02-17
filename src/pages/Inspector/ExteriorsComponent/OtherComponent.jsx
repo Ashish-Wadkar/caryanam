@@ -12,6 +12,7 @@ import {
   Button,
   Modal,
   makeStyles,
+  TextField,
 } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import UploadImage4 from "../../../ui/UploadImageComponents/UploadImage4";
@@ -350,8 +351,19 @@ const OtherComponent = ({
             >
               <MenuItem value="OneSide">One Side </MenuItem>
               <MenuItem value="NoPooling">No Pooling</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
             </Select>
           </FormControl>
+          {formData.CarPoolingon === "Other" && (
+                      <TextField
+                        fullWidth
+                        label="Enter Car Pooling Condition"
+                        name="customCARPOOLING"
+                        value={formData.customCARPOOLING || ""}
+                        onChange={handleChange}
+                        style={{ marginTop: "10px" }}
+                      />
+                    )}
           <div className="flex gap-5">
             <Button
               onClick={handleSubmitWithoutImage}
@@ -541,8 +553,19 @@ const OtherComponent = ({
               <MenuItem value="Repaired">Repaired</MenuItem>
               <MenuItem value="Damaged">Damaged </MenuItem>
               <MenuItem value="Broken">Broken</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
             </Select>
           </FormControl>
+          {formData.UpperCrossMember === "Other" && (
+                      <TextField
+                        fullWidth
+                        label="Enter Upper Cross Member Condition"
+                        name="customUpperCM"
+                        value={formData.customUpperCM || ""}
+                        onChange={handleChange}
+                        style={{ marginTop: "10px" }}
+                      />
+                    )}
           <div className="flex gap-5">
             <Button
               onClick={handleSubmitWithoutImage}
