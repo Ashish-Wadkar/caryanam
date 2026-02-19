@@ -165,33 +165,33 @@ const Tyre = ({setCheckstep}) => {
     reader.readAsDataURL(file);
   };
   
-  const handleSubmitWithoutImage = async () => {
-    if (lables) {
+  const handleSubmitWithoutImage = async (fieldName) => {
+    const subtype = fieldName || lables;
+    const selectedValue = fieldName ? formData[fieldName] : selectfiled;
+    const valueStr = Array.isArray(selectedValue) ? (selectedValue.length ? selectedValue[0] : "") : (selectedValue ?? "");
+    if (!subtype || !valueStr || (typeof valueStr === "string" && !valueStr.trim())) {
+      toast.error("Please select an option from the dropdown first", { autoClose: 2000 });
+      return;
+    }
     const formDataToSend1 = new FormData();
     formDataToSend1.append('beadingCarId', beadingCarId);
     formDataToSend1.append('doctype', "Exterior");
-    formDataToSend1.append('subtype', lables);
-    formDataToSend1.append('comment', selectfiled);
+    formDataToSend1.append('subtype', subtype);
+    formDataToSend1.append('comment', typeof valueStr === "string" ? valueStr : String(valueStr));
     formDataToSend1.append('documentType', "InspectionReport");
     formDataToSend1.append('doc', "");
     try {
       const res = await addBiddingCarWithoutImage({formDataToSend1});
       refetch()
-      
-      if (res.data?.message === "success") {
+      if (res?.data?.message === "success") {
         toast.success("Data Uploaded", { autoClose: 500 });
-        setLables('');
-        setSelectfiled('');
+        if (!fieldName) { setLables(''); setSelectfiled(''); }
       } else {
         toast.error("Data Upload failed", { autoClose: 500 });
       }
     } catch (error) {
-      // console.error('Error uploading the data:', error);
-      alert("Data not Uploaded")
+      alert("Data not Uploaded");
     }
-  } else {
-    toast.error("Input is required", { autoClose: 2000 });
-  }
   };
 
   if (
@@ -288,7 +288,7 @@ const Tyre = ({setCheckstep}) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LHSFrontTyre")}
               size="small"
               variant="contained"
               color="success"
@@ -351,7 +351,7 @@ const Tyre = ({setCheckstep}) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RHSFrontTyre")}
               size="small"
               variant="contained"
               color="success"
@@ -414,7 +414,7 @@ const Tyre = ({setCheckstep}) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LHSRearTyre")}
               size="small"
               variant="contained"
               color="success"
@@ -477,7 +477,7 @@ const Tyre = ({setCheckstep}) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RHSRearTyre")}
               size="small"
               variant="contained"
               color="success"
@@ -540,7 +540,7 @@ const Tyre = ({setCheckstep}) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("SpareTyre")}
               size="small"
               variant="contained"
               color="success"

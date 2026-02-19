@@ -106,7 +106,8 @@ const ImportantDocuments = ({ inspData }) => {
       insuranceType: formData.insuranceType,
       noClaimBonus: formData.noClaimBonus,
       underHypothecation: formData.underHypothecation,
-      loanStatus: formData.LoanStatus === "Other"
+      loanStatus:
+        formData.LoanStatus === "Other"
           ? formData.customLoanStatus
           : formData.LoanStatus,
       roadTaxPaid: formData.roadTaxPaid,
@@ -263,7 +264,7 @@ const ImportantDocuments = ({ inspData }) => {
             </FormControl>
           </Grid>
 
-          {/* Under Hypothecation */}
+          
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required error={!!errors.LoanStatus}>
               <InputLabel>Loan Status</InputLabel>
@@ -282,21 +283,23 @@ const ImportantDocuments = ({ inspData }) => {
                 <FormHelperText>{errors.LoanStatus}</FormHelperText>
               )}
             </FormControl>
-            {formData.LoanStatus === "Other" && (
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  required
-                  label="Enter Loan Status"
-                  name="customLoanStatus"
-                  value={formData.customLoanStatus}
-                  onChange={handleChange}
-                  error={!!errors.customLoanStatus}
-                  helperText={errors.customLoanStatus}
-                />
-              </Grid>
-            )}
           </Grid>
+
+          {/* Custom Input (Separate Grid Item) */}
+          {formData.LoanStatus === "Other" && (
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                label="Enter Loan Status"
+                name="customLoanStatus"
+                value={formData.customLoanStatus}
+                onChange={handleChange}
+                error={!!errors.customLoanStatus}
+                helperText={errors.customLoanStatus}
+              />
+            </Grid>
+          )}
 
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required error={!!errors.underHypothecation}>

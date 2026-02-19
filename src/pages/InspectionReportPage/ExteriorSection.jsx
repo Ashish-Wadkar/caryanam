@@ -56,7 +56,17 @@ const ExteriorSection = () => {
     RightPillarA: "",
     RightPillarB: "",
     RightPillarC: "",
-
+    LHSORVM: "",
+    RHSORVM: "",
+    CarPoolingon: "",
+    LHSRunningBorder: "",
+    RHSRunningBorder: "",
+    UpperCrossMember: "",
+    UnderBody: "",
+    RightSide: "",
+    LeftSide: "",
+    RearSide: "",
+    EngineMotor: "",
 
 
 
@@ -107,8 +117,18 @@ const ExteriorSection = () => {
     RightPillarAs: null,
     RightPillarBs: null,
     RightPillarCs: null,
+    LHSORVMs: null,
+    RHSORVMs: null,
+    CarPoolingons: null,
+    LHSRunningBorders: null,
+    RHSRunningBorders: null,
+    UpperCrossMembers: null,
+    UnderBodys: null,
+    RightSides: null,
+    LeftSides: null,
+    RearSides: null,
+    EngineMotors: null,
   });
-  console.log(data);
 
   useEffect(() => {
     // Pre-fill form data and uploaded images based on API data
@@ -286,6 +306,50 @@ const ExteriorSection = () => {
                 case "RightPillarC":
                 setFormData((prev) => ({ ...prev, RightPillarC: item.comment }));
                 setUploadedImages((prev) => ({ ...prev, RightPillarCs: item.documentLink }));
+                break;
+                case "LHSORVM":
+                setFormData((prev) => ({ ...prev, LHSORVM: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, LHSORVMs: item.documentLink }));
+                break;
+                case "RHSORVM":
+                setFormData((prev) => ({ ...prev, RHSORVM: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, RHSORVMs: item.documentLink }));
+                break;
+                case "CarPoolingon":
+                setFormData((prev) => ({ ...prev, CarPoolingon: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, CarPoolingons: item.documentLink }));
+                break;
+                case "LHSRunningBorder":
+                setFormData((prev) => ({ ...prev, LHSRunningBorder: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, LHSRunningBorders: item.documentLink }));
+                break;
+                case "RHSRunningBorder":
+                setFormData((prev) => ({ ...prev, RHSRunningBorder: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, RHSRunningBorders: item.documentLink }));
+                break;
+                case "UpperCrossMember":
+                setFormData((prev) => ({ ...prev, UpperCrossMember: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, UpperCrossMembers: item.documentLink }));
+                break;
+                case "UnderBody":
+                setFormData((prev) => ({ ...prev, UnderBody: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, UnderBodys: item.documentLink }));
+                break;
+                case "RightSide":
+                setFormData((prev) => ({ ...prev, RightSide: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, RightSides: item.documentLink }));
+                break;
+                case "LeftSide":
+                setFormData((prev) => ({ ...prev, LeftSide: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, LeftSides: item.documentLink }));
+                break;
+                case "RearSide":
+                setFormData((prev) => ({ ...prev, RearSide: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, RearSides: item.documentLink }));
+                break;
+                case "EngineMotor":
+                setFormData((prev) => ({ ...prev, EngineMotor: item.comment }));
+                setUploadedImages((prev) => ({ ...prev, EngineMotors: item.documentLink }));
                 break;
 
         default:
@@ -484,6 +548,32 @@ const ExteriorSection = () => {
             />
           )}</Grid>
 
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">Under Body : {formData.UnderBody}</Typography>
+        {uploadedImages.UnderBodys && (
+            <img src={uploadedImages.UnderBodys} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
+          )}</Grid>
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">Right Side : {formData.RightSide}</Typography>
+        {uploadedImages.RightSides && (
+            <img src={uploadedImages.RightSides} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
+          )}</Grid>
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">Left Side : {formData.LeftSide}</Typography>
+        {uploadedImages.LeftSides && (
+            <img src={uploadedImages.LeftSides} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
+          )}</Grid>
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">Rear Side : {formData.RearSide}</Typography>
+        {uploadedImages.RearSides && (
+            <img src={uploadedImages.RearSides} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
+          )}</Grid>
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">Engine Motor : {formData.EngineMotor}</Typography>
+        {uploadedImages.EngineMotors && (
+            <img src={uploadedImages.EngineMotors} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
+          )}</Grid>
+
         </Grid>
         </div>
       
@@ -610,6 +700,16 @@ const ExteriorSection = () => {
             />
           )}</Grid>
 
+<Grid item xs={12} sm={6}>
+          <Typography variant="body1">LHS ORVM : {formData.LHSORVM}</Typography>
+          {uploadedImages.LHSORVMs && (
+            <img src={uploadedImages.LHSORVMs} alt="Uploaded" style={{ maxWidth: '20%', marginTop: '10px', cursor: 'pointer' }} />
+          )}</Grid>
+<Grid item xs={12} sm={6}>
+          <Typography variant="body1">RHS ORVM : {formData.RHSORVM}</Typography>
+          {uploadedImages.RHSORVMs && (
+            <img src={uploadedImages.RHSORVMs} alt="Uploaded" style={{ maxWidth: '20%', marginTop: '10px', cursor: 'pointer' }} />
+          )}</Grid>
 
         {/* Mismatch in RC */}
         <Grid item xs={12} sm={6}>
@@ -738,7 +838,26 @@ const ExteriorSection = () => {
             />
           )}</Grid>
 
-        
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">Car Pooling : {formData.CarPoolingon}</Typography>
+        {uploadedImages.CarPoolingons && (
+            <img src={uploadedImages.CarPoolingons} alt="Uploaded" style={{ maxWidth: '20%', marginTop: '10px', cursor: 'pointer' }} />
+          )}</Grid>
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">LHS Running Border : {formData.LHSRunningBorder}</Typography>
+        {uploadedImages.LHSRunningBorders && (
+            <img src={uploadedImages.LHSRunningBorders} alt="Uploaded" style={{ maxWidth: '20%', marginTop: '10px', cursor: 'pointer' }} />
+          )}</Grid>
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">RHS Running Border : {formData.RHSRunningBorder}</Typography>
+        {uploadedImages.RHSRunningBorders && (
+            <img src={uploadedImages.RHSRunningBorders} alt="Uploaded" style={{ maxWidth: '20%', marginTop: '10px', cursor: 'pointer' }} />
+          )}</Grid>
+        <Grid item xs={12} sm={6}>
+        <Typography variant="body1">Upper Cross Member : {formData.UpperCrossMember}</Typography>
+        {uploadedImages.UpperCrossMembers && (
+            <img src={uploadedImages.UpperCrossMembers} alt="Uploaded" style={{ maxWidth: '20%', marginTop: '10px', cursor: 'pointer' }} />
+          )}</Grid>
 
       </Grid>
       </div>

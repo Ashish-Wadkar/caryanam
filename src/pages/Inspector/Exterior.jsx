@@ -116,11 +116,11 @@ const Exterior = ({ setCheckstep }) => {
     UpperCrossMember: [],
     customUpperCM:"",
     //new added
-    UnderBody: [],
-    RightSide: [],
-    LeftSide: [],
-    RearSide: [],
-    EngineMotor: [],
+    UnderBody: "",
+    RightSide: "",
+    LeftSide: "",
+    RearSide: "",
+    EngineMotor: "",
   });
 
   const [uploadedImages, setUploadedImages] = useState({
@@ -339,13 +339,18 @@ const Exterior = ({ setCheckstep }) => {
       // console.log(imageData);
       setFormData({ ...formData, [fieldName]: imageData });
       if (lables) {
+        let finalComment = selectfiled;
+        if (lables === "LHSORVM" && selectfiled === "Other") { finalComment = formData.customLHSORVM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for LHS ORVM before uploading", { autoClose: 2000 }); return; } }
+        if (lables === "RHSORVM" && selectfiled === "Other") { finalComment = formData.customRHSORVM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for RHS ORVM before uploading", { autoClose: 2000 }); return; } }
+        if (lables === "CarPoolingon" && selectfiled === "Other") { finalComment = formData.customCARPOOLING || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for Car Pooling before uploading", { autoClose: 2000 }); return; } }
+        if (lables === "UpperCrossMember" && selectfiled === "Other") { finalComment = formData.customUpperCM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for Upper Cross Member before uploading", { autoClose: 2000 }); return; } }
         const inspectionData = {
           documentType: "InspectionReport",
           beadingCarId: beadingCarId,
           doc: "",
           doctype: "Exterior",
           subtype: lables,
-          comment: selectfiled,
+          comment: finalComment,
         };
 
         try {
@@ -373,60 +378,66 @@ const Exterior = ({ setCheckstep }) => {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmitWithoutImage = async () => {
-    if (lables) {
-      let finalComment = selectfiled;
+  const handleSubmitWithoutImage = async (fieldName) => {
+  const subtype = fieldName || lables;
+  let selectedValue = fieldName ? formData[fieldName] : selectfiled;
+  
+  // Handle arrays - extract the first value if array, otherwise use the value as-is
+  if (Array.isArray(selectedValue)) {
+    selectedValue = selectedValue.length > 0 ? selectedValue[0] : "";
+  }
+  
+  // If value is base64 image data (from upload), treat as no selection for "submit without image"
+  if (typeof selectedValue === "string" && selectedValue.startsWith("data:")) {
+    selectedValue = "";
+  }
 
-      
-      if (lables === "LHSORVM" && selectfiled === "Other") {
-        finalComment = formData.customLHSORVM;
-      }
+  if (!subtype || !selectedValue || (typeof selectedValue === "string" && !selectedValue.trim())) {
+    toast.error("Please select an option from the dropdown first", { autoClose: 2000 });
+    return;
+  }
 
-      if (lables === "RHSORVM" && selectfiled === "Other") {
-        finalComment = formData.customRHSORVM;
-      }
+  let finalComment = selectedValue;
 
-       if (
-      lables === "CarPoolingon" &&
-      selectfiled === "Other"
-    ) {
-      finalComment = formData.customCARPOOLING;
-    }
+  if (subtype === "LHSORVM" && selectedValue === "Other") {
+    finalComment = formData.customLHSORVM || "";
+    if (!finalComment.trim()) { toast.error("Please enter the custom value for LHS ORVM", { autoClose: 2000 }); return; }
+  }
+  if (subtype === "RHSORVM" && selectedValue === "Other") {
+    finalComment = formData.customRHSORVM || "";
+    if (!finalComment.trim()) { toast.error("Please enter the custom value for RHS ORVM", { autoClose: 2000 }); return; }
+  }
+  if (subtype === "CarPoolingon" && selectedValue === "Other") {
+    finalComment = formData.customCARPOOLING || "";
+    if (!finalComment.trim()) { toast.error("Please enter the custom value for Car Pooling", { autoClose: 2000 }); return; }
+  }
+  if (subtype === "UpperCrossMember" && selectedValue === "Other") {
+    finalComment = formData.customUpperCM || "";
+    if (!finalComment.trim()) { toast.error("Please enter the custom value for Upper Cross Member", { autoClose: 2000 }); return; }
+  }
 
-     
-    if (
-      lables === "UpperCrossMember" &&
-      selectfiled === "Other"
-    ) {
-      finalComment = formData.customUpperCM;
-    }
+  const formDataToSend1 = new FormData();
+  formDataToSend1.append("beadingCarId", beadingCarId);
+  formDataToSend1.append("doctype", "Exterior");
+  formDataToSend1.append("subtype", subtype);
+  formDataToSend1.append("comment", finalComment);
+  formDataToSend1.append("documentType", "InspectionReport");
+  formDataToSend1.append("doc", "");
 
-      const formDataToSend1 = new FormData();
-      formDataToSend1.append("beadingCarId", beadingCarId);
-      formDataToSend1.append("doctype", "Exterior");
-      formDataToSend1.append("subtype", lables);
-      formDataToSend1.append("comment", finalComment);
-      formDataToSend1.append("documentType", "InspectionReport");
-      formDataToSend1.append("doc", "");
+  try {
+    const res = await addBiddingCarWithoutImage({ formDataToSend1 });
+    refetch();
 
-      try {
-        const res = await addBiddingCarWithoutImage({ formDataToSend1 });
-        refetch();
-
-        if (res?.data.message === "success") {
-          toast.success("Data Uploaded", { autoClose: 500 });
-          setLables("");
-          setSelectfiled("");
-        } else {
-          toast.error("Data Upload failed", { autoClose: 500 });
-        }
-      } catch (error) {
-        toast.error("Data not Uploaded", { autoClose: 500 });
-      }
+    if (res?.data?.message === "success") {
+      toast.success("Data Uploaded", { autoClose: 500 });
     } else {
-      toast.error("Input is required", { autoClose: 2000 });
+      toast.error("Data Upload failed", { autoClose: 500 });
     }
-  };
+  } catch (error) {
+    toast.error("Data not Uploaded", { autoClose: 500 });
+  }
+};
+
 
   const handleCameraModal = (key) => {
     setCaptureModalOpen(true);
@@ -436,7 +447,7 @@ const Exterior = ({ setCheckstep }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-
+    if (name.startsWith("custom")) return;
     if (value.length > 0) {
       setLables(name);
       setSelectfiled(value);
@@ -517,13 +528,18 @@ const Exterior = ({ setCheckstep }) => {
     const formDataToSend = new FormData();
     formDataToSend.append("image", file);
 
+    let finalComment = selectfiled;
+    if (lables === "LHSORVM" && selectfiled === "Other") { finalComment = formData.customLHSORVM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for LHS ORVM before uploading"); return; } }
+    if (lables === "RHSORVM" && selectfiled === "Other") { finalComment = formData.customRHSORVM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for RHS ORVM before uploading"); return; } }
+    if (lables === "CarPoolingon" && selectfiled === "Other") { finalComment = formData.customCARPOOLING || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for Car Pooling before uploading"); return; } }
+    if (lables === "UpperCrossMember" && selectfiled === "Other") { finalComment = formData.customUpperCM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for Upper Cross Member before uploading"); return; } }
     const inspectionData = {
       documentType: "InspectionReport",
       beadingCarId: beadingCarId,
       doc: "",
       doctype: "Exterior",
       subtype: lables,
-      comment: selectfiled,
+      comment: finalComment,
     };
 
     try {
@@ -580,7 +596,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("BonnetHood")}
               size="small"
               variant="contained"
               color="success"
@@ -649,7 +665,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightDoorFront")}
               size="small"
               variant="contained"
               color="success"
@@ -718,7 +734,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftDoorFront")}
               size="small"
               variant="contained"
               color="success"
@@ -787,7 +803,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightFender")}
               size="small"
               variant="contained"
               color="success"
@@ -856,7 +872,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftQuarterPanel")}
               size="small"
               variant="contained"
               color="success"
@@ -925,7 +941,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightQuarterPanel")}
               size="small"
               variant="contained"
               color="success"
@@ -996,7 +1012,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("Roof")}
               size="small"
               variant="contained"
               color="success"
@@ -1065,7 +1081,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("DickyDoor")}
               size="small"
               variant="contained"
               color="success"
@@ -1134,7 +1150,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftDoorRear")}
               size="small"
               variant="contained"
               color="success"
@@ -1203,7 +1219,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightDoorRear")}
               size="small"
               variant="contained"
               color="success"
@@ -1272,7 +1288,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftFender")}
               size="small"
               variant="contained"
               color="success"
@@ -1338,7 +1354,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("UnderBody")}
               size="small"
               variant="contained"
               color="success"
@@ -1404,7 +1420,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightSide")}
               size="small"
               variant="contained"
               color="success"
@@ -1470,7 +1486,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftSide")}
               size="small"
               variant="contained"
               color="success"
@@ -1536,7 +1552,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RearSide")}
               size="small"
               variant="contained"
               color="success"
@@ -1601,7 +1617,7 @@ const Exterior = ({ setCheckstep }) => {
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("EngineMotor")}
               size="small"
               variant="contained"
               color="success"

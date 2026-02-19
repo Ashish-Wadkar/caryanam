@@ -179,7 +179,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("CowlTop")}
               size="small"
               variant="contained"
               color="success"
@@ -247,7 +247,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("BootFloor")}
               size="small"
               variant="contained"
               color="success"
@@ -316,7 +316,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightApronLEG")}
               size="small"
               variant="contained"
               color="success"
@@ -385,7 +385,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftApronLEG")}
               size="small"
               variant="contained"
               color="success"
@@ -454,7 +454,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightApron")}
               size="small"
               variant="contained"
               color="success"
@@ -523,7 +523,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftApron")}
               size="small"
               variant="contained"
               color="success"
@@ -593,7 +593,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftPillar")}
               size="small"
               variant="contained"
               color="success"
@@ -663,7 +663,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftPillarA")}
               size="small"
               variant="contained"
               color="success"
@@ -734,7 +734,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftPillarB")}
               size="small"
               variant="contained"
               color="success"
@@ -805,7 +805,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LeftPillarC")}
               size="small"
               variant="contained"
               color="success"
@@ -875,7 +875,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightPillar")}
               size="small"
               variant="contained"
               color="success"
@@ -945,7 +945,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightPillarA")}
               size="small"
               variant="contained"
               color="success"
@@ -1015,7 +1015,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightPillarB")}
               size="small"
               variant="contained"
               color="success"
@@ -1086,7 +1086,7 @@ const Structure = ({ handleCameraModal,
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RightPillarC")}
               size="small"
               variant="contained"
               color="success"

@@ -90,6 +90,16 @@ const CarDocumentSection = ({ inspData }) => {
             </Typography>
           </Grid>
 
+          {/* Loan Status */}
+          <Grid item xs={12} sm={6}>
+            <Typography variant="body1">
+              Loan Status:{" "}
+              <span className="font-semibold">
+                {inspData?.object.loanStatus}
+              </span>
+            </Typography>
+          </Grid>
+
           {/* Road Tax Paid */}
           <Grid item xs={12} sm={6}>
             <Typography variant="body1">
@@ -189,6 +199,18 @@ const CarDocumentSection = ({ inspData }) => {
               </span>
             </Typography>
           </Grid>
+
+          {/* NOC Status */}
+          {inspData?.object.NOCStatus && (
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1">
+                NOC Status:{" "}
+                <span className="font-semibold">
+                  {inspData?.object.NOCStatus}
+                </span>
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </div>
       {/* <div className="flex justify-between mt-10 px-8">

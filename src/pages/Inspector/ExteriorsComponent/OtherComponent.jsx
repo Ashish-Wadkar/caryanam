@@ -167,7 +167,7 @@ const OtherComponent = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("HeadLightSupport")}
               size="small"
               variant="contained"
               color="success"
@@ -232,7 +232,7 @@ const OtherComponent = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RadiatorSupport")}
               size="small"
               variant="contained"
               color="success"
@@ -296,7 +296,7 @@ const OtherComponent = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("AlloyWheel")}
               size="small"
               variant="contained"
               color="success"
@@ -366,7 +366,7 @@ const OtherComponent = ({
                     )}
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("CarPoolingon")}
               size="small"
               variant="contained"
               color="success"
@@ -430,7 +430,7 @@ const OtherComponent = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LHSRunningBorder")}
               size="small"
               variant="contained"
               color="success"
@@ -493,7 +493,7 @@ const OtherComponent = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RHSRunningBorder")}
               size="small"
               variant="contained"
               color="success"
@@ -568,7 +568,7 @@ const OtherComponent = ({
                     )}
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("UpperCrossMember")}
               size="small"
               variant="contained"
               color="success"

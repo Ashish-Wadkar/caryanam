@@ -190,7 +190,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("Windshield")}
               size="small"
               variant="contained"
               color="success"
@@ -254,7 +254,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("FrontWindshield")}
               size="small"
               variant="contained"
               color="success"
@@ -319,7 +319,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RearWindshield")}
               size="small"
               variant="contained"
               color="success"
@@ -386,7 +386,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("Light")}
               size="small"
               variant="contained"
               color="success"
@@ -450,7 +450,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("FrontBumper")}
               size="small"
               variant="contained"
               color="success"
@@ -515,7 +515,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RearBumper")}
               size="small"
               variant="contained"
               color="success"
@@ -580,7 +580,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LHSHeadlight")}
               size="small"
               variant="contained"
               color="success"
@@ -645,7 +645,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RHSHeadlight")}
               size="small"
               variant="contained"
               color="success"
@@ -710,7 +710,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LHSTaillight")}
               size="small"
               variant="contained"
               color="success"
@@ -775,7 +775,7 @@ const WindshieldAndLights = ({
           </FormControl>
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RHSTaillight")}
               size="small"
               variant="contained"
               color="success"
@@ -852,7 +852,7 @@ const WindshieldAndLights = ({
 
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("LHSORVM")}
               size="small"
               variant="contained"
               color="success"
@@ -926,7 +926,7 @@ const WindshieldAndLights = ({
 
           <div className="flex gap-5">
             <Button
-              onClick={handleSubmitWithoutImage}
+              onClick={() => handleSubmitWithoutImage("RHSORVM")}
               size="small"
               variant="contained"
               color="success"
