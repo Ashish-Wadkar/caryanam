@@ -49,11 +49,11 @@ const Tyre = ({setCheckstep}) => {
 
 
   const [formData, setFormData] = useState({
-    LHSFrontTyre: [],
-    RHSFrontTyre: [],
-    LHSRearTyre: [],
-    RHSRearTyre: [],
-    SpareTyre: []
+    LHSFrontTyre: "",
+    RHSFrontTyre: "",
+    LHSRearTyre: "",
+    RHSRearTyre: "",
+    SpareTyre: "",
   });
 
   const [inspectionReport ] = useInspectionReportMutation();
@@ -63,7 +63,14 @@ const Tyre = ({setCheckstep}) => {
   const [captureModalOpen, setCaptureModalOpen] = useState(false);
   // const [selectedLable ,setSelectedLable] = useState("");
   const [lables, setLables] = useState("");
-  const [selectfiled, setSelectfiled] = useState("")
+  const [selectfiled, setSelectfiled] = useState("");
+  const fieldForUploadRef = useRef(null);
+  const formDataRef = useRef(formData);
+  const lablesRef = useRef(lables);
+  const selectfiledRef = useRef(selectfiled);
+  formDataRef.current = formData;
+  lablesRef.current = lables;
+  selectfiledRef.current = selectfiled;
 
   const [uploadedImages, setUploadedImages] = useState({
     LHSFrontTyres: null,
@@ -208,51 +215,75 @@ const Tyre = ({setCheckstep}) => {
     console.log("One or more conditions not met, setting checkstep to false");
   }
   
-  const handleChange= (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-
-    if (value.length > 0) {
+    const nextFormData = { ...formDataRef.current, [name]: value };
+    formDataRef.current = nextFormData;
+    setFormData(nextFormData);
+    if (value && (typeof value === "string" ? value.trim() : true)) {
+      lablesRef.current = name;
+      selectfiledRef.current = value;
       setLables(name);
       setSelectfiled(value);
     }
   };
   const fileInputRef = useRef(null);
-  const handleCaptureImage = () => {
+  const handleCaptureImage = (fieldName) => {
+    fieldForUploadRef.current = fieldName || null;
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
 
-  const handleImageClick =  async(event)  => {
-    // Handle the image upload here
-    const file = event.target.files[0];
+  const handleImageClick = async (event) => {
+    const file = event?.target?.files?.[0];
+    if (!file) return;
+
+    const fieldName = fieldForUploadRef.current;
+    const latestFormData = formDataRef.current;
+    const currentLables = lablesRef.current;
+    const currentSelectfiled = selectfiledRef.current;
+    let rawValue = fieldName ? latestFormData[fieldName] : currentSelectfiled;
+    if (fieldName && (rawValue === undefined || rawValue === "" || (Array.isArray(rawValue) && !rawValue.length)) && currentLables === fieldName) {
+      rawValue = currentSelectfiled;
+    }
+    const comment = Array.isArray(rawValue)
+      ? (rawValue.length ? rawValue[0] : "")
+      : (rawValue ?? "");
+    const subtype = fieldName || currentLables;
+
+    if (!subtype || !comment || (typeof comment === "string" && !comment.trim())) {
+      toast.error("Please select an option from the dropdown first", { autoClose: 2000 });
+      if (event?.target) event.target.value = "";
+      return;
+    }
+
+    const commentStr = (typeof comment === "string" ? comment : String(comment ?? "")).trim();
     const formDataToSend = new FormData();
     formDataToSend.append('image', file);
-    
     const inspectionData = {
-        documentType: "InspectionReport",
-        beadingCarId: beadingCarId,
-        doc: "",
-        doctype: "Exterior",
-        subtype: lables,
-        comment: selectfiled,
-      };
-  
-      try {
-        const res = await inspectionReport({ inspectionData, formDataToSend });
-        refetch()
-       
-        if (res.data?.message === "success") {
-          toast.success("Data Uploaded", { autoClose: 500 });
-        } else {
-          toast.error("Data Upload failed", { autoClose: 500 });
-        }
-      } catch (error) {
-        // console.error('Error uploading the file:', error);
-        toast.error("Data not Uploaded", { autoClose: 500 });
-      }
+      documentType: "InspectionReport",
+      beadingCarId: beadingCarId,
+      doc: "",
+      doctype: "Exterior",
+      subtype: subtype || "",
+      comment: commentStr,
     };
+
+    try {
+      const res = await inspectionReport({ inspectionData, formDataToSend });
+      refetch();
+      if (res?.data?.message === "success") {
+        toast.success("Data Uploaded", { autoClose: 500 });
+      } else {
+        toast.error("Data Upload failed", { autoClose: 500 });
+      }
+    } catch (error) {
+      toast.error("Data not Uploaded", { autoClose: 500 });
+    }
+    event.target.value = "";
+    fieldForUploadRef.current = null;
+  };
 
   const handleReset = (fieldName) => {
     setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
@@ -268,6 +299,14 @@ const Tyre = ({setCheckstep}) => {
   
   return (
     <div className="p-4">
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        ref={fileInputRef}
+        onChange={handleImageClick}
+        aria-hidden
+      />
       <Typography variant="h4" className="text-black font-bold pb-5 pt-16">
         Tyres
       </Typography>
@@ -296,21 +335,16 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
+            <span
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCaptureImage("LHSFrontTyre")}
+                onKeyDown={(e) => e.key === "Enter" && handleCaptureImage("LHSFrontTyre")}
                 className="cursor-pointer flex items-center"
               >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
-              </label>
+              </span>
             <Button
               onClick={() => handleReset("LHSFrontTyre")}
               size="small"
@@ -359,21 +393,16 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
+            <span
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCaptureImage("RHSFrontTyre")}
+                onKeyDown={(e) => e.key === "Enter" && handleCaptureImage("RHSFrontTyre")}
                 className="cursor-pointer flex items-center"
               >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
-              </label>
+              </span>
             <Button
               onClick={() => handleReset("RHSFrontTyre")}
               size="small"
@@ -422,21 +451,16 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
+            <span
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCaptureImage("LHSRearTyre")}
+                onKeyDown={(e) => e.key === "Enter" && handleCaptureImage("LHSRearTyre")}
                 className="cursor-pointer flex items-center"
               >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
-              </label>
+              </span>
             <Button
               onClick={() => handleReset("LHSRearTyre")}
               size="small"
@@ -485,21 +509,16 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
+            <span
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCaptureImage("RHSRearTyre")}
+                onKeyDown={(e) => e.key === "Enter" && handleCaptureImage("RHSRearTyre")}
                 className="cursor-pointer flex items-center"
               >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
-              </label>
+              </span>
             <Button
               onClick={() => handleReset("RHSRearTyre")}
               size="small"
@@ -548,21 +567,16 @@ const Tyre = ({setCheckstep}) => {
             >
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
+            <span
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCaptureImage("SpareTyre")}
+                onKeyDown={(e) => e.key === "Enter" && handleCaptureImage("SpareTyre")}
                 className="cursor-pointer flex items-center"
               >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
                 <CloudUploadIcon />
                 <span className="ml-2">Upload Image</span>
-              </label>
+              </span>
             <Button
               onClick={() => handleReset("SpareTyre")}
               size="small"

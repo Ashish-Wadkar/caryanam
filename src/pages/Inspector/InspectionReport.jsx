@@ -276,7 +276,7 @@ const ImportantDocuments = ({ inspData }) => {
                 <MenuItem value="Paid/Closed">Paid/Closed</MenuItem>
                 <MenuItem value="Unpaid/Pending">Unpaid/Pending</MenuItem>
                 <MenuItem value="NA">NA</MenuItem>
-                <MenuItem value="PaidButHpnrc">Paid But HPNRC</MenuItem>
+                <MenuItem value="Paid But Hpnrc">Paid But HPNRC</MenuItem>
                 <MenuItem value="Other">Other</MenuItem>
               </Select>
               {errors.LoanStatus && (

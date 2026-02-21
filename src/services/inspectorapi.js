@@ -23,14 +23,20 @@ export const inspectorAPI = apiSlice.injectEndpoints({
       providesTags:["Inspector","User"]
        // Same here
     }),
-
+  
     inspectionReport : builder.mutation ({
-      query : ({inspectionData,formDataToSend}) => ({
-        url : `/uploadFileBidCar/add?documentType=${inspectionData.documentType}&beadingCarId=${inspectionData.beadingCarId}&doc=${inspectionData.doc}&doctype=${inspectionData.doctype}&subtype=${inspectionData.subtype}&comment=${inspectionData.comment}`,
-       
-        method : "POST",
-        body :formDataToSend
-      }),
+      query : ({inspectionData,formDataToSend}) => {
+        const comment = inspectionData.comment != null ? encodeURIComponent(String(inspectionData.comment)) : "";
+        const doc = inspectionData.doc != null ? encodeURIComponent(String(inspectionData.doc)) : "";
+        const doctype = inspectionData.doctype != null ? encodeURIComponent(String(inspectionData.doctype)) : "";
+        const subtype = inspectionData.subtype != null ? encodeURIComponent(String(inspectionData.subtype)) : "";
+        const documentType = inspectionData.documentType != null ? encodeURIComponent(String(inspectionData.documentType)) : "";
+        return {
+          url : `/uploadFileBidCar/add?documentType=${documentType}&beadingCarId=${inspectionData.beadingCarId}&doc=${doc}&doctype=${doctype}&subtype=${subtype}&comment=${comment}`,
+          method : "POST",
+          body : formDataToSend
+        };
+      },
       providesTags:["Inspector"]
     }),
     inspectionReportNew : builder.mutation ({

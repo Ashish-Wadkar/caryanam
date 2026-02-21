@@ -178,9 +178,7 @@ export default function App() {
             <Route path="/Admin/UserRequest" element={<AdminUserReq />} />
 
             <Route path="/admin" element={<Admin />} />
-            <Route
-              path="/admin/dealer/carlist/:id"
-              element={<AdminCarList />}
+            <Route path="/admin/dealer/carlist/:id" element={<AdminCarList />}
             />
             <Route path="/admin/dealer/:id" element={<SellForCar />} />
             <Route path="/admin/premium/:id" element={<SellForCarPremium />} />
@@ -438,7 +436,7 @@ export default function App() {
             <Route path="/seller/info/:userId" element={<AdminSalesInfo />} />
             <Route path="/sale/dealer/info/:id" element={<AdminDealerInfo />} />
           </Route>
-          <Route path="/user/:userid/favorite" element={<FavoritePage />} />
+          <Route path="/user/:userid/favorite" element={<FavoritePage />} /> 
           <Route path="/sellcarlist" element={<SellCarList />} />
           <Route path="/sellcarform" element={<SellCarForm />} />
 
