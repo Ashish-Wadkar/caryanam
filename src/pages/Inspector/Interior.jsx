@@ -390,8 +390,8 @@ const Interior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeatherSeat")}
@@ -513,8 +513,8 @@ const Interior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("CabinFloor")}
@@ -722,8 +722,8 @@ const Interior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
 
             <Button
@@ -786,8 +786,8 @@ const Interior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("SeatCover")}

@@ -415,8 +415,8 @@ const Engine = ({setCheckstep}) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("EngineMounting")}
@@ -476,8 +476,8 @@ const Engine = ({setCheckstep}) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("EngineSound")}
@@ -538,8 +538,8 @@ const Engine = ({setCheckstep}) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("Exhaustsmoke")}
@@ -598,8 +598,8 @@ const Engine = ({setCheckstep}) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("Gearbox")}
@@ -657,8 +657,8 @@ const Engine = ({setCheckstep}) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("Engineoil")}
@@ -777,8 +777,8 @@ const Engine = ({setCheckstep}) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("Coolant")}
@@ -837,8 +837,8 @@ const Engine = ({setCheckstep}) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("Clutch")}

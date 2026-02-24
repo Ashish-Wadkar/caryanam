@@ -187,8 +187,8 @@ const OtherComponent = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("HeadLightSupport")}
@@ -252,8 +252,8 @@ const OtherComponent = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RadiatorSupport")}
@@ -316,8 +316,8 @@ const OtherComponent = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("AlloyWheel")}
@@ -386,8 +386,8 @@ const OtherComponent = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("CarPoolingon")}
@@ -450,8 +450,8 @@ const OtherComponent = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LHSRunningBorder")}
@@ -513,8 +513,8 @@ const OtherComponent = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RHSRunningBorder")}
@@ -588,8 +588,8 @@ const OtherComponent = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("UpperCrossMember")}

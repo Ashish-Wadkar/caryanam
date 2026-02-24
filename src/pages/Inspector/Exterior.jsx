@@ -114,13 +114,14 @@ const Exterior = ({ setCheckstep }) => {
     LHSRunningBorder: [],
     RHSRunningBorder: [],
     UpperCrossMember: [],
-    customUpperCM:"",
+    customUpperCM: "",
     //new added
     UnderBody: "",
     RightSide: "",
     LeftSide: "",
     RearSide: "",
     EngineMotor: "",
+    FrontSide: "",
   });
 
   const [uploadedImages, setUploadedImages] = useState({
@@ -179,6 +180,7 @@ const Exterior = ({ setCheckstep }) => {
     LeftSide: null,
     RearSide: null,
     EngineMotor: null,
+    FrontSide: null,
   });
 
   useEffect(() => {
@@ -280,6 +282,13 @@ const Exterior = ({ setCheckstep }) => {
             LeftSide: item.documentLink,
           }));
           break;
+        case "FrontSide":
+          setFormData((prev) => ({ ...prev, FrontSide: item.comment }));
+          setUploadedImages((prev) => ({
+            ...prev,
+            LeftSide: item.documentLink,
+          }));
+          break;
         case "RearSide":
           setFormData((prev) => ({ ...prev, RearSide: item.comment }));
           setUploadedImages((prev) => ({
@@ -340,10 +349,46 @@ const Exterior = ({ setCheckstep }) => {
       setFormData({ ...formData, [fieldName]: imageData });
       if (lables) {
         let finalComment = selectfiled;
-        if (lables === "LHSORVM" && selectfiled === "Other") { finalComment = formData.customLHSORVM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for LHS ORVM before uploading", { autoClose: 2000 }); return; } }
-        if (lables === "RHSORVM" && selectfiled === "Other") { finalComment = formData.customRHSORVM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for RHS ORVM before uploading", { autoClose: 2000 }); return; } }
-        if (lables === "CarPoolingon" && selectfiled === "Other") { finalComment = formData.customCARPOOLING || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for Car Pooling before uploading", { autoClose: 2000 }); return; } }
-        if (lables === "UpperCrossMember" && selectfiled === "Other") { finalComment = formData.customUpperCM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for Upper Cross Member before uploading", { autoClose: 2000 }); return; } }
+        if (lables === "LHSORVM" && selectfiled === "Other") {
+          finalComment = formData.customLHSORVM || "";
+          if (!finalComment.trim()) {
+            toast.error(
+              "Please enter the custom value for LHS ORVM before uploading",
+              { autoClose: 2000 },
+            );
+            return;
+          }
+        }
+        if (lables === "RHSORVM" && selectfiled === "Other") {
+          finalComment = formData.customRHSORVM || "";
+          if (!finalComment.trim()) {
+            toast.error(
+              "Please enter the custom value for RHS ORVM before uploading",
+              { autoClose: 2000 },
+            );
+            return;
+          }
+        }
+        if (lables === "CarPoolingon" && selectfiled === "Other") {
+          finalComment = formData.customCARPOOLING || "";
+          if (!finalComment.trim()) {
+            toast.error(
+              "Please enter the custom value for Car Pooling before uploading",
+              { autoClose: 2000 },
+            );
+            return;
+          }
+        }
+        if (lables === "UpperCrossMember" && selectfiled === "Other") {
+          finalComment = formData.customUpperCM || "";
+          if (!finalComment.trim()) {
+            toast.error(
+              "Please enter the custom value for Upper Cross Member before uploading",
+              { autoClose: 2000 },
+            );
+            return;
+          }
+        }
         const inspectionData = {
           documentType: "InspectionReport",
           beadingCarId: beadingCarId,
@@ -379,65 +424,93 @@ const Exterior = ({ setCheckstep }) => {
   };
 
   const handleSubmitWithoutImage = async (fieldName) => {
-  const subtype = fieldName || lables;
-  let selectedValue = fieldName ? formData[fieldName] : selectfiled;
-  
-  // Handle arrays - extract the first value if array, otherwise use the value as-is
-  if (Array.isArray(selectedValue)) {
-    selectedValue = selectedValue.length > 0 ? selectedValue[0] : "";
-  }
-  
-  // If value is base64 image data (from upload), treat as no selection for "submit without image"
-  if (typeof selectedValue === "string" && selectedValue.startsWith("data:")) {
-    selectedValue = "";
-  }
+    const subtype = fieldName || lables;
+    let selectedValue = fieldName ? formData[fieldName] : selectfiled;
 
-  if (!subtype || !selectedValue || (typeof selectedValue === "string" && !selectedValue.trim())) {
-    toast.error("Please select an option from the dropdown first", { autoClose: 2000 });
-    return;
-  }
-
-  let finalComment = selectedValue;
-
-  if (subtype === "LHSORVM" && selectedValue === "Other") {
-    finalComment = formData.customLHSORVM || "";
-    if (!finalComment.trim()) { toast.error("Please enter the custom value for LHS ORVM", { autoClose: 2000 }); return; }
-  }
-  if (subtype === "RHSORVM" && selectedValue === "Other") {
-    finalComment = formData.customRHSORVM || "";
-    if (!finalComment.trim()) { toast.error("Please enter the custom value for RHS ORVM", { autoClose: 2000 }); return; }
-  }
-  if (subtype === "CarPoolingon" && selectedValue === "Other") {
-    finalComment = formData.customCARPOOLING || "";
-    if (!finalComment.trim()) { toast.error("Please enter the custom value for Car Pooling", { autoClose: 2000 }); return; }
-  }
-  if (subtype === "UpperCrossMember" && selectedValue === "Other") {
-    finalComment = formData.customUpperCM || "";
-    if (!finalComment.trim()) { toast.error("Please enter the custom value for Upper Cross Member", { autoClose: 2000 }); return; }
-  }
-
-  const formDataToSend1 = new FormData();
-  formDataToSend1.append("beadingCarId", beadingCarId);
-  formDataToSend1.append("doctype", "Exterior");
-  formDataToSend1.append("subtype", subtype);
-  formDataToSend1.append("comment", finalComment);
-  formDataToSend1.append("documentType", "InspectionReport");
-  formDataToSend1.append("doc", "");
-
-  try {
-    const res = await addBiddingCarWithoutImage({ formDataToSend1 });
-    refetch();
-
-    if (res?.data?.message === "success") {
-      toast.success("Data Uploaded", { autoClose: 500 });
-    } else {
-      toast.error("Data Upload failed", { autoClose: 500 });
+    // Handle arrays - extract the first value if array, otherwise use the value as-is
+    if (Array.isArray(selectedValue)) {
+      selectedValue = selectedValue.length > 0 ? selectedValue[0] : "";
     }
-  } catch (error) {
-    toast.error("Data not Uploaded", { autoClose: 500 });
-  }
-};
 
+    // If value is base64 image data (from upload), treat as no selection for "submit without image"
+    if (
+      typeof selectedValue === "string" &&
+      selectedValue.startsWith("data:")
+    ) {
+      selectedValue = "";
+    }
+
+    if (
+      !subtype ||
+      !selectedValue ||
+      (typeof selectedValue === "string" && !selectedValue.trim())
+    ) {
+      toast.error("Please select an option from the dropdown first", {
+        autoClose: 2000,
+      });
+      return;
+    }
+
+    let finalComment = selectedValue;
+
+    if (subtype === "LHSORVM" && selectedValue === "Other") {
+      finalComment = formData.customLHSORVM || "";
+      if (!finalComment.trim()) {
+        toast.error("Please enter the custom value for LHS ORVM", {
+          autoClose: 2000,
+        });
+        return;
+      }
+    }
+    if (subtype === "RHSORVM" && selectedValue === "Other") {
+      finalComment = formData.customRHSORVM || "";
+      if (!finalComment.trim()) {
+        toast.error("Please enter the custom value for RHS ORVM", {
+          autoClose: 2000,
+        });
+        return;
+      }
+    }
+    if (subtype === "CarPoolingon" && selectedValue === "Other") {
+      finalComment = formData.customCARPOOLING || "";
+      if (!finalComment.trim()) {
+        toast.error("Please enter the custom value for Car Pooling", {
+          autoClose: 2000,
+        });
+        return;
+      }
+    }
+    if (subtype === "UpperCrossMember" && selectedValue === "Other") {
+      finalComment = formData.customUpperCM || "";
+      if (!finalComment.trim()) {
+        toast.error("Please enter the custom value for Upper Cross Member", {
+          autoClose: 2000,
+        });
+        return;
+      }
+    }
+
+    const formDataToSend1 = new FormData();
+    formDataToSend1.append("beadingCarId", beadingCarId);
+    formDataToSend1.append("doctype", "Exterior");
+    formDataToSend1.append("subtype", subtype);
+    formDataToSend1.append("comment", finalComment);
+    formDataToSend1.append("documentType", "InspectionReport");
+    formDataToSend1.append("doc", "");
+
+    try {
+      const res = await addBiddingCarWithoutImage({ formDataToSend1 });
+      refetch();
+
+      if (res?.data?.message === "success") {
+        toast.success("Data Uploaded", { autoClose: 500 });
+      } else {
+        toast.error("Data Upload failed", { autoClose: 500 });
+      }
+    } catch (error) {
+      toast.error("Data not Uploaded", { autoClose: 500 });
+    }
+  };
 
   const handleCameraModal = (key) => {
     setCaptureModalOpen(true);
@@ -505,6 +578,7 @@ const Exterior = ({ setCheckstep }) => {
     formData.UpperCrossMember.length > 0 &&
     formData.UnderBody.length > 0 &&
     formData.RightSide.length > 0 &&
+    formData.FrontSide.length > 0 &&
     formData.LeftSide.length > 0 &&
     formData.RearSide.length > 0 &&
     formData.EngineMotor.length > 0
@@ -529,10 +603,42 @@ const Exterior = ({ setCheckstep }) => {
     formDataToSend.append("image", file);
 
     let finalComment = selectfiled;
-    if (lables === "LHSORVM" && selectfiled === "Other") { finalComment = formData.customLHSORVM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for LHS ORVM before uploading"); return; } }
-    if (lables === "RHSORVM" && selectfiled === "Other") { finalComment = formData.customRHSORVM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for RHS ORVM before uploading"); return; } }
-    if (lables === "CarPoolingon" && selectfiled === "Other") { finalComment = formData.customCARPOOLING || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for Car Pooling before uploading"); return; } }
-    if (lables === "UpperCrossMember" && selectfiled === "Other") { finalComment = formData.customUpperCM || ""; if (!finalComment.trim()) { toast.error("Please enter the custom value for Upper Cross Member before uploading"); return; } }
+    if (lables === "LHSORVM" && selectfiled === "Other") {
+      finalComment = formData.customLHSORVM || "";
+      if (!finalComment.trim()) {
+        toast.error(
+          "Please enter the custom value for LHS ORVM before uploading",
+        );
+        return;
+      }
+    }
+    if (lables === "RHSORVM" && selectfiled === "Other") {
+      finalComment = formData.customRHSORVM || "";
+      if (!finalComment.trim()) {
+        toast.error(
+          "Please enter the custom value for RHS ORVM before uploading",
+        );
+        return;
+      }
+    }
+    if (lables === "CarPoolingon" && selectfiled === "Other") {
+      finalComment = formData.customCARPOOLING || "";
+      if (!finalComment.trim()) {
+        toast.error(
+          "Please enter the custom value for Car Pooling before uploading",
+        );
+        return;
+      }
+    }
+    if (lables === "UpperCrossMember" && selectfiled === "Other") {
+      finalComment = formData.customUpperCM || "";
+      if (!finalComment.trim()) {
+        toast.error(
+          "Please enter the custom value for Upper Cross Member before uploading",
+        );
+        return;
+      }
+    }
     const inspectionData = {
       documentType: "InspectionReport",
       beadingCarId: beadingCarId,
@@ -685,8 +791,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RightDoorFront")}
@@ -754,8 +860,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeftDoorFront")}
@@ -823,8 +929,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RightFender")}
@@ -892,8 +998,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeftQuarterPanel")}
@@ -961,8 +1067,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RightQuarterPanel")}
@@ -1032,8 +1138,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("Roof")}
@@ -1101,8 +1207,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("DickyDoor")}
@@ -1170,8 +1276,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeftDoorRear")}
@@ -1239,8 +1345,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RightDoorRear")}
@@ -1308,8 +1414,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeftFender")}
@@ -1463,6 +1569,73 @@ const Exterior = ({ setCheckstep }) => {
                 cursor: "pointer",
               }}
               onClick={() => handleImageClick(uploadedImages.RightSide)}
+            />
+          )}
+        </Grid>
+
+
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth required>
+            <InputLabel>Front Side</InputLabel>
+            <Select
+              required
+              name="FrontSide"
+              value={formData.FrontSide}
+              onChange={handleChange}
+            >
+              <MenuItem value="Ok">Ok</MenuItem>
+              <MenuItem value="Rusted">Rusted</MenuItem>
+              <MenuItem value="Good Condition">Good Condition</MenuItem>
+              <MenuItem value="Damaged">Damaged</MenuItem>
+              <MenuItem value="Repaired">Repaired</MenuItem>
+              <MenuItem value="Scratched">Scratched</MenuItem>
+            </Select>
+          </FormControl>
+          <div className="flex gap-5">
+            <Button
+              onClick={() => handleSubmitWithoutImage("FrontSide")}
+              size="small"
+              variant="contained"
+              color="success"
+              style={{ marginTop: "10px" }}
+            >
+              Submit Without image
+            </Button>
+            <label
+              htmlFor="upload-RightSide"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button
+              onClick={() => handleReset("FrontSide")}
+              size="small"
+              variant="outlined"
+              color="secondary"
+              style={{ marginTop: "10px" }}
+            >
+              Reset
+            </Button>
+          </div>
+          {uploadedImages.FrontSide && (
+            <img
+              src={uploadedImages.FrontSide}
+              alt="Uploaded"
+              style={{
+                maxWidth: "20%",
+                marginTop: "10px",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(uploadedImages.FrontSide)}
             />
           )}
         </Grid>
@@ -1637,8 +1810,8 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("EngineMotor")}

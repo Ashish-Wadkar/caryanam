@@ -210,8 +210,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("Windshield")}
@@ -274,8 +274,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("FrontWindshield")}
@@ -339,8 +339,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RearWindshield")}
@@ -406,8 +406,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("Light")}
@@ -470,8 +470,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("FrontBumper")}
@@ -535,8 +535,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RearBumper")}
@@ -600,8 +600,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LHSHeadlight")}
@@ -665,8 +665,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RHSHeadlight")}
@@ -730,8 +730,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LHSTaillight")}
@@ -795,8 +795,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RHSTaillight")}
@@ -872,8 +872,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LHSORVM")}
@@ -946,8 +946,8 @@ const WindshieldAndLights = ({
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span>
+              {/* <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RHSORVM")}

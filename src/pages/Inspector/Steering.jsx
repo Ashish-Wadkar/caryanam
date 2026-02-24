@@ -318,8 +318,8 @@ const Steering = ({ setCheckstep }) => {
                     ref={fileInputRef}
                     onChange={handleImageClick}
                   />
-                  <CloudUploadIcon />
-                  <span className="ml-2">Upload Image</span>
+                  {/* <CloudUploadIcon />
+                  <span className="ml-2">Upload Image</span> */}
                 </label>
               <Button
                 onClick={() => handleReset("Steering")}
@@ -382,8 +382,8 @@ const Steering = ({ setCheckstep }) => {
                     ref={fileInputRef}
                     onChange={handleImageClick}
                   />
-                  <CloudUploadIcon />
-                  <span className="ml-2">Upload Image</span>
+                  {/* <CloudUploadIcon />
+                  <span className="ml-2">Upload Image</span> */}
                 </label>
               <Button
                 onClick={() => handleReset("Brake")}
@@ -446,8 +446,8 @@ const Steering = ({ setCheckstep }) => {
                     ref={fileInputRef}
                     onChange={handleImageClick}
                   />
-                  <CloudUploadIcon />
-                  <span className="ml-2">Upload Image</span>
+                  {/* <CloudUploadIcon />
+                  <span className="ml-2">Upload Image</span> */}
                 </label>
               <Button
                 onClick={() => handleReset("Suspension")}

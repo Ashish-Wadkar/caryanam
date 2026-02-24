@@ -199,8 +199,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("CowlTop")}
@@ -267,8 +267,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("BootFloor")}
@@ -336,8 +336,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("RightApronLEG")}
@@ -405,8 +405,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("LeftApronLEG")}
@@ -474,8 +474,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("RightApron")}
@@ -543,8 +543,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("LeftApron")}
@@ -613,8 +613,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("LeftPillar")}
@@ -683,8 +683,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("LeftPillarA")}
@@ -754,8 +754,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("LeftPillarB")}
@@ -825,8 +825,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("LeftPillarC")}
@@ -895,8 +895,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("RightPillar")}
@@ -965,8 +965,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("RightPillarA")}
@@ -1035,8 +1035,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("RightPillarB")}
@@ -1106,8 +1106,8 @@ const Structure = ({ handleCameraModal,
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("RightPillarC")}

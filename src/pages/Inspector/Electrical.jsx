@@ -355,8 +355,8 @@ const Electrical = ({ setCheckstep }) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("FourPowerWindows")}
@@ -415,8 +415,8 @@ const Electrical = ({ setCheckstep }) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("AirBagFeatures")}
@@ -475,8 +475,8 @@ const Electrical = ({ setCheckstep }) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("MusicSystem")}
@@ -535,8 +535,8 @@ const Electrical = ({ setCheckstep }) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("Sunroof")}
@@ -596,8 +596,8 @@ const Electrical = ({ setCheckstep }) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("ABS")}
@@ -656,8 +656,8 @@ const Electrical = ({ setCheckstep }) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("InteriorParkingSensor")}
@@ -716,8 +716,8 @@ const Electrical = ({ setCheckstep }) => {
                   ref={fileInputRef}
                   onChange={handleImageClick}
                 />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
+                {/* <CloudUploadIcon />
+                <span className="ml-2">Upload Image</span> */}
               </label>
             <Button
               onClick={() => handleReset("Electricalwiring")}
