@@ -349,6 +349,7 @@ const OtherComponent = ({
               value={formData.CarPoolingon}
               onChange={handleChange}
             >
+              <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="OneSide">One Side </MenuItem>
               <MenuItem value="NoPooling">No Pooling</MenuItem>
               <MenuItem value="Other">Other</MenuItem>
@@ -419,6 +420,7 @@ const OtherComponent = ({
               value={formData.LHSRunningBorder}
               onChange={handleChange}
             >
+              <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="OneSide"> Repainted </MenuItem>
               <MenuItem value="Dented">Dented</MenuItem>
               <MenuItem value="Scratched">Scratched </MenuItem>
@@ -482,6 +484,7 @@ const OtherComponent = ({
               value={formData.RHSRunningBorder}
               onChange={handleChange}
             >
+              <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="OneSide"> Repainted </MenuItem>
               <MenuItem value="Dented">Dented</MenuItem>
               <MenuItem value="Scratched">Scratched </MenuItem>
@@ -546,6 +549,7 @@ const OtherComponent = ({
               value={formData.UpperCrossMember}
               onChange={handleChange}
             >
+              <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="OneSide"> Repainted </MenuItem>
               <MenuItem value="Dented">Dented</MenuItem>
               <MenuItem value="Scratched">Scratched </MenuItem>

@@ -630,6 +630,7 @@ const Engine = ({setCheckstep}) => {
               value={formData.Engineoil}
               onChange={handleChange}
             >
+              <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Low Level">Low Level</MenuItem>
               <MenuItem value="Leakage">Leakage</MenuItem>
               <MenuItem value="Deteriorated">Deteriorated</MenuItem>
@@ -750,6 +751,7 @@ const Engine = ({setCheckstep}) => {
               value={formData.Coolant}
               onChange={handleChange}
             >
+              <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Low Level">Low Level</MenuItem>
               <MenuItem value="Leakage">Leakage</MenuItem>
               <MenuItem value="Deteriorated">Deteriorated</MenuItem>

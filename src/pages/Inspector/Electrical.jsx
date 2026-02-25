@@ -328,8 +328,9 @@ const Electrical = ({ setCheckstep }) => {
               value={formData.FourPowerWindows}
               onChange={handleChange}
             >
-              <MenuItem value="Not Working">Not Working</MenuItem>
               <MenuItem value="Ok">Ok</MenuItem>
+              <MenuItem value="Not Working">Not Working</MenuItem>
+              
               <MenuItem value="Damaged">Damaged</MenuItem>
             </Select>
           </FormControl>
@@ -508,6 +509,7 @@ const Electrical = ({ setCheckstep }) => {
               value={formData.Sunroof}
               onChange={handleChange}
             >
+              <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Not Working">Not Working</MenuItem>
               <MenuItem value="NA">NA</MenuItem>
               <MenuItem value="Damaged">Damaged</MenuItem>
@@ -629,6 +631,7 @@ const Electrical = ({ setCheckstep }) => {
               value={formData.InteriorParkingSensor}
               onChange={handleChange}
             >
+              <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Not Working">Not Working</MenuItem>
               <MenuItem value="NA">NA</MenuItem>
               <MenuItem value="Damaged">Damaged</MenuItem>
