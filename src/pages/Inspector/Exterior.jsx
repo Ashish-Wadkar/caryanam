@@ -51,6 +51,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+ 
+const compressImage = (file, quality = 0.5) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            const compressedFile = new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            // ✅ View compression result in browser DevTools → Console tab
+            console.log(
+              `🗜️ Compressed: ${file.name} | Original: ${(file.size / 1024 / 1024).toFixed(2)} MB → Compressed: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`
+            );
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const Exterior = ({ setCheckstep }) => {
   const classes = useStyles();
   const { beadingCarId } = useParams();
@@ -286,7 +321,7 @@ const Exterior = ({ setCheckstep }) => {
           setFormData((prev) => ({ ...prev, FrontSide: item.comment }));
           setUploadedImages((prev) => ({
             ...prev,
-            LeftSide: item.documentLink,
+            FrontSide: item.documentLink,
           }));
           break;
         case "RearSide":
@@ -324,13 +359,12 @@ const Exterior = ({ setCheckstep }) => {
 
   const userRole = token ? jwtDecodes?.authorities[0] : null;
 
+  // ─── handleFileChange (with 50% compression) ────────────────────────────────
   const handleFileChange = async (event, fieldName, imgPreview = "") => {
     imgPreview;
-    // console.log(imgPreview);
     let file;
     let imageData;
     if (!event?.target) {
-      // console.log("name");
       file = event;
       imageData = file;
     } else {
@@ -339,13 +373,15 @@ const Exterior = ({ setCheckstep }) => {
 
     if (!file) return;
 
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
+    formDataToSend.append("image", compressedFile);
 
     const reader = new FileReader();
     reader.onload = async () => {
       imageData = reader.result;
-      // console.log(imageData);
       setFormData({ ...formData, [fieldName]: imageData });
       if (lables) {
         let finalComment = selectfiled;
@@ -354,7 +390,7 @@ const Exterior = ({ setCheckstep }) => {
           if (!finalComment.trim()) {
             toast.error(
               "Please enter the custom value for LHS ORVM before uploading",
-              { autoClose: 2000 },
+              { autoClose: 2000 }
             );
             return;
           }
@@ -364,7 +400,7 @@ const Exterior = ({ setCheckstep }) => {
           if (!finalComment.trim()) {
             toast.error(
               "Please enter the custom value for RHS ORVM before uploading",
-              { autoClose: 2000 },
+              { autoClose: 2000 }
             );
             return;
           }
@@ -374,7 +410,7 @@ const Exterior = ({ setCheckstep }) => {
           if (!finalComment.trim()) {
             toast.error(
               "Please enter the custom value for Car Pooling before uploading",
-              { autoClose: 2000 },
+              { autoClose: 2000 }
             );
             return;
           }
@@ -384,7 +420,7 @@ const Exterior = ({ setCheckstep }) => {
           if (!finalComment.trim()) {
             toast.error(
               "Please enter the custom value for Upper Cross Member before uploading",
-              { autoClose: 2000 },
+              { autoClose: 2000 }
             );
             return;
           }
@@ -413,15 +449,16 @@ const Exterior = ({ setCheckstep }) => {
             toast.error("Data Upload failed", { autoClose: 500 });
           }
         } catch (error) {
-          // console.error('Error uploading the file:', error);
           toast.error("Data not Uploaded", { autoClose: 500 });
         }
       } else {
         toast.error("Input is required", { autoClose: 2000 });
       }
     };
-    reader.readAsDataURL(file);
+    // Read the compressed file for preview
+    reader.readAsDataURL(compressedFile);
   };
+  // ────────────────────────────────────────────────────────────────────────────
 
   const handleSubmitWithoutImage = async (fieldName) => {
     const subtype = fieldName || lables;
@@ -596,18 +633,94 @@ const Exterior = ({ setCheckstep }) => {
     }
   };
 
+  // ─── handleImageClick (with 50% compression) ────────────────────────────────
   const handleImageClick = async (event) => {
-    // Handle the image upload here
+    // If called with a string (image URL preview click), do nothing
+    if (typeof event === "string") return;
+
     const file = event.target.files[0];
+    if (!file) return;
+
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
+    // Generate a local preview URL from the compressed file and store it
+    // so the user can immediately see the uploaded image on the page
+    const previewURL = URL.createObjectURL(compressedFile);
+    if (lables) {
+      // Map the field label to the matching uploadedImages key
+      const labelToImageKey = {
+        BonnetHood: "BonnetHoods",
+        RightDoorFront: "RightDoorFronts",
+        LeftDoorFront: "LeftDoorFronts",
+        RightFender: "RightFenders",
+        LeftQuarterPanel: "LeftQuarterPanels",
+        RightQuarterPanel: "RightQuarterPanels",
+        Roof: "Roofs",
+        DickyDoor: "DickyDoors",
+        LeftDoorRear: "LeftDoorRears",
+        RightDoorRear: "RightDoorRears",
+        LeftFender: "LeftFender",
+        UnderBody: "UnderBody",
+        RightSide: "RightSide",
+        LeftSide: "LeftSide",
+        FrontSide: "FrontSide",
+        RearSide: "RearSide",
+        EngineMotor: "EngineMotor",
+        LHSFrontTyre: "LHSFrontTyres",
+        RHSFrontTyre: "RHSFrontTyres",
+        LHSRearTyre: "LHSRearTyres",
+        RHSRearTyre: "RHSRearTyres",
+        SpareTyre: "SpareTyres",
+        Windshield: "Windshields",
+        FrontWindshield: "FrontWindshield",
+        RearWindshield: "RearWindshield",
+        Light: "Lights",
+        FrontBumper: "FrontBumpers",
+        RearBumper: "RearBumpers",
+        LHSHeadlight: "LHSHeadlights",
+        RHSHeadlight: "RHSHeadlights",
+        LHSTaillight: "LHSTaillights",
+        RHSTaillight: "RHSTaillights",
+        HeadLightSupport: "HeadLightSupports",
+        RadiatorSupport: "RadiatorSupports",
+        AlloyWheel: "AlloyWheels",
+        CowlTop: "CowlTops",
+        BootFloor: "BootFloors",
+        RightApronLEG: "RightApronLEGs",
+        LeftApronLEG: "LeftApronLEGs",
+        RightApron: "RightAprons",
+        LeftApron: "LeftAprons",
+        LeftPillar: "LeftPillars",
+        RightPillar: "RightPillars",
+        RightPillarA: "RightPillarA",
+        RightPillarB: "RightPillarB",
+        RightPillarC: "RightPillarC",
+        LeftPillarA: "LeftPillarA",
+        LeftPillarB: "LeftPillarB",
+        LeftPillarC: "LeftPillarC",
+        LHSORVM: "LHSORVM",
+        RHSORVM: "RHSORVM",
+        CarPoolingon: "CarPoolingon",
+        LHSRunningBorder: "LHSRunningBorder",
+        RHSRunningBorder: "RHSRunningBorder",
+        UpperCrossMember: "UpperCrossMember",
+      };
+      const imageKey = labelToImageKey[lables];
+      if (imageKey) {
+        setUploadedImages((prev) => ({ ...prev, [imageKey]: previewURL }));
+      }
+    }
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
+    formDataToSend.append("image", compressedFile);
 
     let finalComment = selectfiled;
     if (lables === "LHSORVM" && selectfiled === "Other") {
       finalComment = formData.customLHSORVM || "";
       if (!finalComment.trim()) {
         toast.error(
-          "Please enter the custom value for LHS ORVM before uploading",
+          "Please enter the custom value for LHS ORVM before uploading"
         );
         return;
       }
@@ -616,7 +729,7 @@ const Exterior = ({ setCheckstep }) => {
       finalComment = formData.customRHSORVM || "";
       if (!finalComment.trim()) {
         toast.error(
-          "Please enter the custom value for RHS ORVM before uploading",
+          "Please enter the custom value for RHS ORVM before uploading"
         );
         return;
       }
@@ -625,7 +738,7 @@ const Exterior = ({ setCheckstep }) => {
       finalComment = formData.customCARPOOLING || "";
       if (!finalComment.trim()) {
         toast.error(
-          "Please enter the custom value for Car Pooling before uploading",
+          "Please enter the custom value for Car Pooling before uploading"
         );
         return;
       }
@@ -634,7 +747,7 @@ const Exterior = ({ setCheckstep }) => {
       finalComment = formData.customUpperCM || "";
       if (!finalComment.trim()) {
         toast.error(
-          "Please enter the custom value for Upper Cross Member before uploading",
+          "Please enter the custom value for Upper Cross Member before uploading"
         );
         return;
       }
@@ -658,21 +771,18 @@ const Exterior = ({ setCheckstep }) => {
         toast.error("Data Upload failed", { autoClose: 500 });
       }
     } catch (error) {
-      // console.error('Error uploading the file:', error);
       toast.error("Data not Uploaded", { autoClose: 500 });
     }
   };
+  // ────────────────────────────────────────────────────────────────────────────
 
   const handleReset = (fieldName) => {
-    setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
-    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null })); // Reset corresponding uploaded image
-    setLables(""); // Clear labels
-    setSelectfiled(""); // Clear selected field
+    setFormData((prev) => ({ ...prev, [fieldName]: "" }));
+    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null }));
+    setLables("");
+    setSelectfiled("");
   };
 
-  // if (!data) {
-  //   return <div><p>No Data Available</p></div>
-  // }
   return (
     <div className="">
       <Typography variant="h4" className="text-black font-bold pb-5">
@@ -744,7 +854,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.BonnetHoods)}
             />
           )}
         </Grid>
@@ -791,8 +900,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RightDoorFront")}
@@ -813,7 +920,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.RightDoorFronts)}
             />
           )}
         </Grid>
@@ -860,8 +966,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeftDoorFront")}
@@ -882,7 +986,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.LeftDoorFronts)}
             />
           )}
         </Grid>
@@ -929,8 +1032,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RightFender")}
@@ -951,7 +1052,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.RightFenders)}
             />
           )}
         </Grid>
@@ -998,8 +1098,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeftQuarterPanel")}
@@ -1020,7 +1118,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.LeftQuarterPanels)}
             />
           )}
         </Grid>
@@ -1067,8 +1164,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RightQuarterPanel")}
@@ -1089,9 +1184,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() =>
-                handleImageClick(uploadedImages.RightQuarterPanels)
-              }
             />
           )}
         </Grid>
@@ -1138,8 +1230,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("Roof")}
@@ -1160,7 +1250,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.Roofs)}
             />
           )}
         </Grid>
@@ -1207,8 +1296,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("DickyDoor")}
@@ -1229,7 +1316,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.DickyDoors)}
             />
           )}
         </Grid>
@@ -1276,8 +1362,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeftDoorRear")}
@@ -1298,7 +1382,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.LeftDoorRears)}
             />
           )}
         </Grid>
@@ -1345,8 +1428,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("RightDoorRear")}
@@ -1367,7 +1448,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.RightDoorRears)}
             />
           )}
         </Grid>
@@ -1414,8 +1494,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeftFender")}
@@ -1436,11 +1514,11 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.LeftFender)}
             />
           )}
         </Grid>
 
+        {/* Under Body */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Under Body</InputLabel>
@@ -1502,11 +1580,11 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.UnderBody)}
             />
           )}
         </Grid>
 
+        {/* Right Side */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Right Side</InputLabel>
@@ -1568,12 +1646,11 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.RightSide)}
             />
           )}
         </Grid>
 
-
+        {/* Front Side */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Front Side</InputLabel>
@@ -1602,7 +1679,7 @@ const Exterior = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-              htmlFor="upload-RightSide"
+              htmlFor="upload-FrontSide"
               onClick={handleCaptureImage}
               className="cursor-pointer flex items-center"
             >
@@ -1635,11 +1712,11 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.FrontSide)}
             />
           )}
         </Grid>
 
+        {/* Left Side */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Left Side</InputLabel>
@@ -1701,11 +1778,11 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.LeftSide)}
             />
           )}
         </Grid>
 
+        {/* Rear Side */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Rear Side</InputLabel>
@@ -1767,11 +1844,11 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.RearSide)}
             />
           )}
         </Grid>
 
+        {/* Engine Motor */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Engine Motor</InputLabel>
@@ -1810,8 +1887,6 @@ const Exterior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("EngineMotor")}
@@ -1832,7 +1907,6 @@ const Exterior = ({ setCheckstep }) => {
                 marginTop: "10px",
                 cursor: "pointer",
               }}
-              onClick={() => handleImageClick(uploadedImages.EngineMotor)}
             />
           )}
         </Grid>
@@ -1842,7 +1916,6 @@ const Exterior = ({ setCheckstep }) => {
       <Modal
         open={captureModalOpen}
         onClose={() => setCaptureModalOpen(false)}
-        // className={classes.modal}
       >
         <div className={classes.paper}>
           <UploadImage4
@@ -1914,13 +1987,6 @@ const Exterior = ({ setCheckstep }) => {
         setSelectfiled={setSelectfiled}
         handleChange={handleChange}
       />
-
-      {/* <div className="flex justify-end mt-10 px-8">
-        
-        <Button variant="contained" color="success">
-          Next
-        </Button> 
-      </div> */}
     </div>
   );
 };

@@ -46,6 +46,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// ─── Image Compression Helper ────────────────────────────────────────────────
+// Compresses an image File to the given quality (0.0 – 1.0).
+// 0.5 = 50% quality → typically reduces a 30 MB image to 2–5 MB.
+const compressImage = (file, quality = 0.5) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            const compressedFile = new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            // ✅ View compression result in browser DevTools → Console tab
+            console.log(
+              `🗜️ Compressed: ${file.name} | Original: ${(file.size / 1024 / 1024).toFixed(2)} MB → Compressed: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`,
+            );
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          quality,
+        );
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const Electrical = ({ setCheckstep }) => {
   const classes = useStyles();
   const { beadingCarId } = useParams();
@@ -74,6 +111,7 @@ const Electrical = ({ setCheckstep }) => {
     InteriorParkingSensors: null,
     Electricalwirings: null,
   });
+
   const token = Cookies.get("token");
   let jwtDecodes;
   if (token) {
@@ -89,100 +127,14 @@ const Electrical = ({ setCheckstep }) => {
   const [selectedLable, setSelectedLable] = useState("");
   const [lables, setLables] = useState("");
   const [selectfiled, setSelectfiled] = useState("");
+  const [inspectionReport] = useInspectionReportMutation();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-
     if (value.length > 0) {
       setLables(name);
       setSelectfiled(value);
-    }
-  };
-
-  const [inspectionReport] = useInspectionReportMutation();
-
-  const handleFileChange = async (event, fieldName, imgPreview = "") => {
-    // console.log(imgPreview);
-    let file;
-    let imageData;
-    if (!event?.target) {
-      file = event;
-      imageData = file;
-    } else {
-      file = event.target.files[0];
-    }
-
-    if (!file) return;
-
-    const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-      imageData = reader.result;
-
-      setFormData({ ...formData, ["FourPowerWindowss"]: imageData });
-      if (lables) {
-        const inspectionData = {
-          documentType: "Inspection Report",
-          beadingCarId: beadingCarId,
-          doc: "",
-          doctype: "Eletrical",
-          subtype: lables,
-          comment: selectfiled,
-        };
-
-        try {
-          const res = await inspectionReport({
-            inspectionData,
-            formDataToSend,
-          });
-          refetch();
-
-          if (res.data?.message === "success") {
-            toast.success("Data Uploaded", { autoClose: 500 });
-            setLables("");
-            setSelectfiled("");
-          } else {
-            toast.error("Data Upload failed", { autoClose: 500 });
-          }
-        } catch (error) {
-          // console.error('Error uploading the file:', error);
-          alert("Data not Uploaded");
-        }
-      } else {
-        toast.error("Input is required", { autoClose: 2000 });
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleSubmitWithoutImage = async () => {
-    if (lables) {
-      const formDataToSend1 = new FormData();
-      formDataToSend1.append("beadingCarId", beadingCarId);
-      formDataToSend1.append("doctype", "Eletrical");
-      formDataToSend1.append("subtype", lables);
-      formDataToSend1.append("comment", selectfiled);
-      formDataToSend1.append("documentType", "InspectionReport");
-      formDataToSend1.append("doc", "");
-      try {
-        const res = await addBiddingCarWithoutImage({ formDataToSend1 });
-        refetch();
-
-        if (res.data?.message === "success") {
-          toast.success("Data Uploaded", { autoClose: 500 });
-          setLables("");
-          setSelectfiled("");
-        } else {
-          toast.error("Data Upload failed", { autoClose: 500 });
-        }
-      } catch (error) {
-        toast.error("Data not Uploaded", { autoClose: 500 });
-      }
-    } else {
-      toast.error("Input is required", { autoClose: 2000 });
     }
   };
 
@@ -238,6 +190,7 @@ const Electrical = ({ setCheckstep }) => {
       }
     });
   }, [data]);
+
   if (
     formData.ABS !== "" &&
     formData.AirBagFeatures !== "" &&
@@ -248,24 +201,102 @@ const Electrical = ({ setCheckstep }) => {
     formData.Sunroof !== ""
   ) {
     setCheckstep(true);
-    console.log("working");
   } else {
     setCheckstep(false);
   }
-  // const handleImageClick = (image) => {
-  //   setSelectedImage(image);
-  //   setOpenModal(true);
-  // };
+
+  // ─── handleFileChange (with 50% compression) ────────────────────────────────
+  const handleFileChange = async (event, fieldName, imgPreview = "") => {
+    let file;
+    let imageData;
+    if (!event?.target) {
+      file = event;
+      imageData = file;
+    } else {
+      file = event.target.files[0];
+    }
+
+    if (!file) return;
+
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("image", compressedFile);
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      imageData = reader.result;
+      setFormData({ ...formData, [fieldName]: imageData });
+
+      if (lables) {
+        const inspectionData = {
+          documentType: "Inspection Report",
+          beadingCarId: beadingCarId,
+          doc: "",
+          doctype: "Eletrical",
+          subtype: lables,
+          comment: selectfiled,
+        };
+
+        try {
+          const res = await inspectionReport({
+            inspectionData,
+            formDataToSend,
+          });
+          refetch();
+
+          if (res.data?.message === "success") {
+            toast.success("Data Uploaded", { autoClose: 500 });
+            setLables("");
+            setSelectfiled("");
+          } else {
+            toast.error("Data Upload failed", { autoClose: 500 });
+          }
+        } catch (error) {
+          alert("Data not Uploaded");
+        }
+      } else {
+        toast.error("Input is required", { autoClose: 2000 });
+      }
+    };
+    // Read the compressed file for preview
+    reader.readAsDataURL(compressedFile);
+  };
+  // ────────────────────────────────────────────────────────────────────────────
+
+  const handleSubmitWithoutImage = async () => {
+    if (lables) {
+      const formDataToSend1 = new FormData();
+      formDataToSend1.append("beadingCarId", beadingCarId);
+      formDataToSend1.append("doctype", "Eletrical");
+      formDataToSend1.append("subtype", lables);
+      formDataToSend1.append("comment", selectfiled);
+      formDataToSend1.append("documentType", "InspectionReport");
+      formDataToSend1.append("doc", "");
+      try {
+        const res = await addBiddingCarWithoutImage({ formDataToSend1 });
+        refetch();
+
+        if (res.data?.message === "success") {
+          toast.success("Data Uploaded", { autoClose: 500 });
+          setLables("");
+          setSelectfiled("");
+        } else {
+          toast.error("Data Upload failed", { autoClose: 500 });
+        }
+      } catch (error) {
+        toast.error("Data not Uploaded", { autoClose: 500 });
+      }
+    } else {
+      toast.error("Input is required", { autoClose: 2000 });
+    }
+  };
 
   const handleCameraModal = (key) => {
     setCaptureModalOpen(true);
     setSelectedLable(key);
   };
-
-  // const handleCaptureImage = (imageUrl) => {
-  //   setSelectedImage(imageUrl);
-  //   setCaptureModalOpen(false); // Close the camera modal after capturing the image
-  // };
 
   const fileInputRef = useRef(null);
 
@@ -275,11 +306,37 @@ const Electrical = ({ setCheckstep }) => {
     }
   };
 
+  // ─── handleImageClick (with 50% compression + preview) ──────────────────────
   const handleImageClick = async (event) => {
-    // Handle the image upload here
+    // If called with a string (image URL preview click), do nothing
+    if (typeof event === "string") return;
+
     const file = event.target.files[0];
+    if (!file) return;
+
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
+    // Generate a local preview URL and map lables → images key
+    const previewURL = URL.createObjectURL(compressedFile);
+    if (lables) {
+      const labelToImageKey = {
+        FourPowerWindows: "FourPowerWindowss",
+        AirBagFeatures: "AirBagFeaturess",
+        MusicSystem: "MusicSystems",
+        Sunroof: "Sunroofs",
+        ABS: "ABSs",
+        InteriorParkingSensor: "InteriorParkingSensors",
+        Electricalwiring: "Electricalwirings",
+      };
+      const imageKey = labelToImageKey[lables];
+      if (imageKey) {
+        setImages((prev) => ({ ...prev, [imageKey]: previewURL }));
+      }
+    }
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
+    formDataToSend.append("image", compressedFile);
 
     const inspectionData = {
       documentType: "InspectionReport",
@@ -293,24 +350,24 @@ const Electrical = ({ setCheckstep }) => {
     try {
       const res = await inspectionReport({ inspectionData, formDataToSend });
       refetch();
-      // console.log(res);
+
       if (res.data?.message === "success") {
         toast.success("Data Uploaded", { autoClose: 500 });
       } else {
         toast.error("Data Upload failed", { autoClose: 500 });
       }
     } catch (error) {
-      // console.error('Error uploading the file:', error);
       toast.error("Data not Uploaded", { autoClose: 500 });
     }
   };
+  // ────────────────────────────────────────────────────────────────────────────
 
- const handleReset = (fieldName) => {
-   setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
-   setImages((prev) => ({ ...prev, [fieldName + "s"]: null })); // Reset corresponding uploaded image
-   setLables(""); // Clear labels
-   setSelectfiled(""); // Clear selected field
- };
+  const handleReset = (fieldName) => {
+    setFormData((prev) => ({ ...prev, [fieldName]: "" }));
+    setImages((prev) => ({ ...prev, [fieldName + "s"]: null }));
+    setLables("");
+    setSelectfiled("");
+  };
 
   return (
     <div className="p-4">
@@ -330,7 +387,6 @@ const Electrical = ({ setCheckstep }) => {
             >
               <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Not Working">Not Working</MenuItem>
-              
               <MenuItem value="Damaged">Damaged</MenuItem>
             </Select>
           </FormControl>
@@ -345,20 +401,18 @@ const Electrical = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                {/* <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span> */}
-              </label>
+              htmlFor="upload-FourPowerWindows"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+            </label>
             <Button
               onClick={() => handleReset("FourPowerWindows")}
               size="small"
@@ -374,7 +428,6 @@ const Electrical = ({ setCheckstep }) => {
               src={images.FourPowerWindowss}
               alt="Four Power Windows uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(images.FourPowerWindowss)}
             />
           )}
         </Grid>
@@ -405,20 +458,18 @@ const Electrical = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                {/* <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span> */}
-              </label>
+              htmlFor="upload-AirBagFeatures"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+            </label>
             <Button
               onClick={() => handleReset("AirBagFeatures")}
               size="small"
@@ -434,7 +485,6 @@ const Electrical = ({ setCheckstep }) => {
               src={images.AirBagFeaturess}
               alt="Air Bag Features uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(images.AirBagFeaturess)}
             />
           )}
         </Grid>
@@ -465,20 +515,18 @@ const Electrical = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                {/* <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span> */}
-              </label>
+              htmlFor="upload-MusicSystem"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+            </label>
             <Button
               onClick={() => handleReset("MusicSystem")}
               size="small"
@@ -494,7 +542,6 @@ const Electrical = ({ setCheckstep }) => {
               src={images.MusicSystems}
               alt="Music System uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(images.MusicSystems)}
             />
           )}
         </Grid>
@@ -526,20 +573,18 @@ const Electrical = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                {/* <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span> */}
-              </label>
+              htmlFor="upload-Sunroof"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+            </label>
             <Button
               onClick={() => handleReset("Sunroof")}
               size="small"
@@ -555,7 +600,6 @@ const Electrical = ({ setCheckstep }) => {
               src={images.Sunroofs}
               alt="Sunroof uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(images.Sunroofs)}
             />
           )}
         </Grid>
@@ -587,20 +631,18 @@ const Electrical = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                {/* <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span> */}
-              </label>
+              htmlFor="upload-ABS"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+            </label>
             <Button
               onClick={() => handleReset("ABS")}
               size="small"
@@ -616,7 +658,6 @@ const Electrical = ({ setCheckstep }) => {
               src={images.ABSs}
               alt="ABS uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(images.ABSs)}
             />
           )}
         </Grid>
@@ -648,20 +689,18 @@ const Electrical = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                {/* <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span> */}
-              </label>
+              htmlFor="upload-InteriorParkingSensor"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+            </label>
             <Button
               onClick={() => handleReset("InteriorParkingSensor")}
               size="small"
@@ -677,7 +716,6 @@ const Electrical = ({ setCheckstep }) => {
               src={images.InteriorParkingSensors}
               alt="Interior Parking Sensor uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(images.InteriorParkingSensors)}
             />
           )}
         </Grid>
@@ -708,20 +746,18 @@ const Electrical = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                {/* <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span> */}
-              </label>
+              htmlFor="upload-Electricalwiring"
+              onClick={handleCaptureImage}
+              className="cursor-pointer flex items-center"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleImageClick}
+              />
+            </label>
             <Button
               onClick={() => handleReset("Electricalwiring")}
               size="small"
@@ -737,17 +773,13 @@ const Electrical = ({ setCheckstep }) => {
               src={images.Electricalwirings}
               alt="Electrical Wiring uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(images.Electricalwirings)}
             />
           )}
         </Grid>
       </Grid>
 
-      <Modal
-        open={captureModalOpen}
-        onClose={() => setCaptureModalOpen(false)}
-        // className={classes.modal}
-      >
+      {/* Modal for camera capture */}
+      <Modal open={captureModalOpen} onClose={() => setCaptureModalOpen(false)}>
         <div className={classes.paper}>
           <UploadImage4
             isOpen={captureModalOpen}

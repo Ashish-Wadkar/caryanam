@@ -46,6 +46,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// ─── Image Compression Helper ────────────────────────────────────────────────
+// Compresses an image File to the given quality (0.0 – 1.0).
+// 0.5 = 50% quality → typically reduces a 30 MB image to 2–5 MB.
+const compressImage = (file, quality = 0.5) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            const compressedFile = new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            // ✅ View compression result in browser DevTools → Console tab
+            console.log(
+              `🗜️ Compressed: ${file.name} | Original: ${(file.size / 1024 / 1024).toFixed(2)} MB → Compressed: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`,
+            );
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          quality,
+        );
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const Steering = ({ setCheckstep }) => {
   const classes = useStyles();
   const { beadingCarId } = useParams();
@@ -60,6 +97,7 @@ const Steering = ({ setCheckstep }) => {
     Brake: "",
     Suspension: "",
   });
+
   const token = Cookies.get("token");
   let jwtDecodes;
   if (token) {
@@ -86,95 +124,9 @@ const Steering = ({ setCheckstep }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-
     if (value.length > 0) {
       setLables(name);
       setSelectfiled(value);
-    }
-  };
-
-  const handleFileChange = async (event, fieldName, imgPreview = "") => {
-    let file;
-    let imageData;
-    if (!event?.target) {
-      // console.log("name");
-      file = event;
-      imageData = file;
-    } else {
-      file = event.target.files[0];
-    }
-
-    if (!file) return;
-
-    const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-      imageData = reader.result;
-
-      setFormData({ ...formData, ["FourPowerWindowss"]: imageData });
-      if (lables) {
-        const inspectionData = {
-          documentType: "Inspection Report",
-          beadingCarId: beadingCarId,
-          doc: "",
-          doctype: "Steering",
-          subtype: lables,
-          comment: selectfiled,
-        };
-
-        try {
-          const res = await inspectionReport({
-            inspectionData,
-            formDataToSend,
-          });
-          refetch();
-
-          if (res.data?.message === "success") {
-            toast.success("Data Uploaded", { autoClose: 500 });
-            setLables("");
-            setSelectfiled("");
-          } else {
-            toast.error("Data Upload failed", { autoClose: 500 });
-          }
-        } catch (error) {
-          // console.error('Error uploading the file:', error);
-          alert("Data not Uploaded");
-        }
-      } else {
-        toast.error("Input is required", { autoClose: 2000 });
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleSubmitWithoutImage = async () => {
-    if (lables) {
-      const formDataToSend1 = new FormData();
-      formDataToSend1.append("beadingCarId", beadingCarId);
-      formDataToSend1.append("doctype", "Steering");
-      formDataToSend1.append("subtype", lables);
-      formDataToSend1.append("comment", selectfiled);
-      formDataToSend1.append("documentType", "InspectionReport");
-      formDataToSend1.append("doc", "");
-
-      try {
-        const res = await addBiddingCarWithoutImage({ formDataToSend1 });
-        refetch();
-
-        if (res.data?.message === "success") {
-          toast.success("Data Uploaded", { autoClose: 500 });
-          setLables("");
-          setSelectfiled("");
-        } else {
-          toast.error("Data Upload failed", { autoClose: 500 });
-        }
-      } catch (error) {
-        toast.error("Data not Uploaded", { autoClose: 500 });
-      }
-    } else {
-      toast.error("Input is required", { autoClose: 2000 });
     }
   };
 
@@ -205,30 +157,110 @@ const Steering = ({ setCheckstep }) => {
       }
     });
   }, [data]);
+
   if (
     formData.Brake !== "" &&
     formData.Steering !== "" &&
     formData.Suspension !== ""
   ) {
     setCheckstep(true);
-    console.log("working");
   } else {
     setCheckstep(false);
   }
-  // const handleImageClick = (image) => {
-  //   setSelectedImage(image);
-  //   setOpenModal(true);
-  // };
+
+  // ─── handleFileChange (with 50% compression) ────────────────────────────────
+  const handleFileChange = async (event, fieldName, imgPreview = "") => {
+    let file;
+    let imageData;
+    if (!event?.target) {
+      file = event;
+      imageData = file;
+    } else {
+      file = event.target.files[0];
+    }
+
+    if (!file) return;
+
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("image", compressedFile);
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      imageData = reader.result;
+      setFormData({ ...formData, [fieldName]: imageData });
+
+      if (lables) {
+        const inspectionData = {
+          documentType: "Inspection Report",
+          beadingCarId: beadingCarId,
+          doc: "",
+          doctype: "Steering",
+          subtype: lables,
+          comment: selectfiled,
+        };
+
+        try {
+          const res = await inspectionReport({
+            inspectionData,
+            formDataToSend,
+          });
+          refetch();
+
+          if (res.data?.message === "success") {
+            toast.success("Data Uploaded", { autoClose: 500 });
+            setLables("");
+            setSelectfiled("");
+          } else {
+            toast.error("Data Upload failed", { autoClose: 500 });
+          }
+        } catch (error) {
+          alert("Data not Uploaded");
+        }
+      } else {
+        toast.error("Input is required", { autoClose: 2000 });
+      }
+    };
+    // Read the compressed file for preview
+    reader.readAsDataURL(compressedFile);
+  };
+  // ────────────────────────────────────────────────────────────────────────────
+
+  const handleSubmitWithoutImage = async () => {
+    if (lables) {
+      const formDataToSend1 = new FormData();
+      formDataToSend1.append("beadingCarId", beadingCarId);
+      formDataToSend1.append("doctype", "Steering");
+      formDataToSend1.append("subtype", lables);
+      formDataToSend1.append("comment", selectfiled);
+      formDataToSend1.append("documentType", "InspectionReport");
+      formDataToSend1.append("doc", "");
+
+      try {
+        const res = await addBiddingCarWithoutImage({ formDataToSend1 });
+        refetch();
+
+        if (res.data?.message === "success") {
+          toast.success("Data Uploaded", { autoClose: 500 });
+          setLables("");
+          setSelectfiled("");
+        } else {
+          toast.error("Data Upload failed", { autoClose: 500 });
+        }
+      } catch (error) {
+        toast.error("Data not Uploaded", { autoClose: 500 });
+      }
+    } else {
+      toast.error("Input is required", { autoClose: 2000 });
+    }
+  };
 
   const handleCameraModal = (key) => {
     setCaptureModalOpen(true);
     setSelectedLable(key);
   };
-
-  // const handleCaptureImage = (imageUrl) => {
-  //   setSelectedImage(imageUrl);
-  //   setCaptureModalOpen(false); // Close the camera modal after capturing the image
-  // };
 
   const fileInputRef = useRef(null);
 
@@ -238,11 +270,33 @@ const Steering = ({ setCheckstep }) => {
     }
   };
 
+  // ─── handleImageClick (with 50% compression + preview) ──────────────────────
   const handleImageClick = async (event) => {
-    // Handle the image upload here
+    // If called with a string (image URL preview click), do nothing
+    if (typeof event === "string") return;
+
     const file = event.target.files[0];
+    if (!file) return;
+
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
+    // Generate a local preview URL and map lables → uploadedImages key
+    const previewURL = URL.createObjectURL(compressedFile);
+    if (lables) {
+      const labelToImageKey = {
+        Steering: "Steerings",
+        Brake: "Brakes",
+        Suspension: "Suspensions",
+      };
+      const imageKey = labelToImageKey[lables];
+      if (imageKey) {
+        setUploadedImages((prev) => ({ ...prev, [imageKey]: previewURL }));
+      }
+    }
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
+    formDataToSend.append("image", compressedFile);
 
     const inspectionData = {
       documentType: "InspectionReport",
@@ -263,16 +317,16 @@ const Steering = ({ setCheckstep }) => {
         toast.error("Data Upload failed", { autoClose: 500 });
       }
     } catch (error) {
-      // console.error('Error uploading the file:', error);
       toast.error("Data not Uploaded", { autoClose: 500 });
     }
   };
+  // ────────────────────────────────────────────────────────────────────────────
 
   const handleReset = (fieldName) => {
-    setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
-    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null })); // Reset corresponding uploaded image
-    setLables(""); // Clear labels
-    setSelectfiled(""); // Clear selected field
+    setFormData((prev) => ({ ...prev, [fieldName]: "" }));
+    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null }));
+    setLables("");
+    setSelectfiled("");
   };
 
   return (
@@ -282,6 +336,7 @@ const Steering = ({ setCheckstep }) => {
           Steering
         </Typography>
         <Grid container spacing={3}>
+          {/* Steering */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required>
               <InputLabel>Steering</InputLabel>
@@ -293,7 +348,7 @@ const Steering = ({ setCheckstep }) => {
               >
                 <MenuItem value="Ok">Ok</MenuItem>
                 <MenuItem value="Abnormal Noise">Abnormal Noise</MenuItem>
-                <MenuItem value="Hard"> Hard</MenuItem>
+                <MenuItem value="Hard">Hard</MenuItem>
               </Select>
             </FormControl>
             <div className="flex gap-5">
@@ -307,20 +362,18 @@ const Steering = ({ setCheckstep }) => {
                 Submit Without image
               </Button>
               <label
-                  htmlFor="upload-MusicSystems"
-                  onClick={handleCaptureImage}
-                  className="cursor-pointer flex items-center"
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    ref={fileInputRef}
-                    onChange={handleImageClick}
-                  />
-                  {/* <CloudUploadIcon />
-                  <span className="ml-2">Upload Image</span> */}
-                </label>
+                htmlFor="upload-Steering"
+                onClick={handleCaptureImage}
+                className="cursor-pointer flex items-center"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={handleImageClick}
+                />
+              </label>
               <Button
                 onClick={() => handleReset("Steering")}
                 size="small"
@@ -340,11 +393,11 @@ const Steering = ({ setCheckstep }) => {
                   marginTop: "10px",
                   cursor: "pointer",
                 }}
-                onClick={() => handleImageClick(uploadedImages.Steerings)}
               />
             )}
           </Grid>
 
+          {/* Brake */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required>
               <InputLabel>Brake</InputLabel>
@@ -371,20 +424,18 @@ const Steering = ({ setCheckstep }) => {
                 Submit Without image
               </Button>
               <label
-                  htmlFor="upload-MusicSystems"
-                  onClick={handleCaptureImage}
-                  className="cursor-pointer flex items-center"
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    ref={fileInputRef}
-                    onChange={handleImageClick}
-                  />
-                  {/* <CloudUploadIcon />
-                  <span className="ml-2">Upload Image</span> */}
-                </label>
+                htmlFor="upload-Brake"
+                onClick={handleCaptureImage}
+                className="cursor-pointer flex items-center"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={handleImageClick}
+                />
+              </label>
               <Button
                 onClick={() => handleReset("Brake")}
                 size="small"
@@ -404,11 +455,11 @@ const Steering = ({ setCheckstep }) => {
                   marginTop: "10px",
                   cursor: "pointer",
                 }}
-                onClick={() => handleImageClick(uploadedImages.Brakes)}
               />
             )}
           </Grid>
 
+          {/* Suspension */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required>
               <InputLabel>Suspension</InputLabel>
@@ -435,20 +486,18 @@ const Steering = ({ setCheckstep }) => {
                 Submit Without image
               </Button>
               <label
-                  htmlFor="upload-MusicSystems"
-                  onClick={handleCaptureImage}
-                  className="cursor-pointer flex items-center"
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    ref={fileInputRef}
-                    onChange={handleImageClick}
-                  />
-                  {/* <CloudUploadIcon />
-                  <span className="ml-2">Upload Image</span> */}
-                </label>
+                htmlFor="upload-Suspension"
+                onClick={handleCaptureImage}
+                className="cursor-pointer flex items-center"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={handleImageClick}
+                />
+              </label>
               <Button
                 onClick={() => handleReset("Suspension")}
                 size="small"
@@ -468,19 +517,14 @@ const Steering = ({ setCheckstep }) => {
                   marginTop: "10px",
                   cursor: "pointer",
                 }}
-                onClick={() => handleImageClick(uploadedImages.Suspensions)}
               />
             )}
           </Grid>
         </Grid>
       </div>
 
-      {/* Modal for displaying clicked image */}
-      <Modal
-        open={captureModalOpen}
-        onClose={() => setCaptureModalOpen(false)}
-        // className={classes.modal}
-      >
+      {/* Modal for camera capture */}
+      <Modal open={captureModalOpen} onClose={() => setCaptureModalOpen(false)}>
         <div className={classes.paper}>
           <UploadImage4
             isOpen={captureModalOpen}

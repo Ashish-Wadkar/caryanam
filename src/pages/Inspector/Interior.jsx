@@ -46,6 +46,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// ─── Image Compression Helper ────────────────────────────────────────────────
+// Compresses an image File to the given quality (0.0 – 1.0).
+// 0.5 = 50% quality → typically reduces a 30 MB image to 2–5 MB.
+const compressImage = (file, quality = 0.5) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            const compressedFile = new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            // ✅ View compression result in browser DevTools → Console tab
+            console.log(
+              `🗜️ Compressed: ${file.name} | Original: ${(file.size / 1024 / 1024).toFixed(2)} MB → Compressed: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`
+            );
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const Interior = ({ setCheckstep }) => {
   const classes = useStyles();
   const { beadingCarId } = useParams();
@@ -71,8 +108,8 @@ const Interior = ({ setCheckstep }) => {
     Odometers: null,
     CabinFloors: null,
     Dashboards: null,
-    InstrumentCluster: null,
-    ReverseCameraSensor: null,
+    InstrumentClusters: null,
+    ReverseCameraSensors: null,
     SeatCover: null,
   });
 
@@ -106,11 +143,11 @@ const Interior = ({ setCheckstep }) => {
     }
   };
 
+  // ─── handleFileChange (with 50% compression) ────────────────────────────────
   const handleFileChange = async (event, fieldName, imgPreview = "") => {
     let file;
     let imageData;
     if (!event?.target) {
-      // console.log("name");
       file = event;
       imageData = file;
     } else {
@@ -119,8 +156,11 @@ const Interior = ({ setCheckstep }) => {
 
     if (!file) return;
 
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
+    formDataToSend.append("image", compressedFile);
 
     const reader = new FileReader();
     reader.onload = async () => {
@@ -131,7 +171,13 @@ const Interior = ({ setCheckstep }) => {
         let finalComment = selectfiled;
         if (lables === "ReverseCameraSensor" && selectfiled === "Other") {
           finalComment = formData.customReverseCameraSensor || "";
-          if (!finalComment.trim()) { toast.error("Please enter the custom value for Reverse Camera/Sensor before uploading", { autoClose: 2000 }); return; }
+          if (!finalComment.trim()) {
+            toast.error(
+              "Please enter the custom value for Reverse Camera/Sensor before uploading",
+              { autoClose: 2000 }
+            );
+            return;
+          }
         }
         const inspectionData = {
           documentType: "InspectionReport",
@@ -157,15 +203,16 @@ const Interior = ({ setCheckstep }) => {
             toast.error("Data Upload failed", { autoClose: 500 });
           }
         } catch (error) {
-          // console.error('Error uploading the file:', error);
           alert("Data not Uploaded");
         }
       } else {
         toast.error("Input is required", { autoClose: 2000 });
       }
     };
-    reader.readAsDataURL(file);
+    // Read the compressed file for preview
+    reader.readAsDataURL(compressedFile);
   };
+  // ────────────────────────────────────────────────────────────────────────────
 
   const handleSubmitWithoutImage = async (fieldName) => {
     const subtype = fieldName || lables;
@@ -173,8 +220,14 @@ const Interior = ({ setCheckstep }) => {
       ? (latestSelectionRef.current[fieldName] ?? formData[fieldName])
       : (latestSelectionRef.current[lables] ?? selectfiled);
 
-    if (!subtype || !selectedValue || (typeof selectedValue === "string" && !selectedValue.trim())) {
-      toast.error("Please select an option from the dropdown first", { autoClose: 2000 });
+    if (
+      !subtype ||
+      !selectedValue ||
+      (typeof selectedValue === "string" && !selectedValue.trim())
+    ) {
+      toast.error("Please select an option from the dropdown first", {
+        autoClose: 2000,
+      });
       return;
     }
 
@@ -182,37 +235,38 @@ const Interior = ({ setCheckstep }) => {
 
     if (subtype === "ReverseCameraSensor" && selectedValue === "Other") {
       finalComment = formData.customReverseCameraSensor || "";
-      if (!finalComment.trim()) { toast.error("Please enter the custom value for Reverse Camera/Sensor", { autoClose: 2000 }); return; }
+      if (!finalComment.trim()) {
+        toast.error(
+          "Please enter the custom value for Reverse Camera/Sensor",
+          { autoClose: 2000 }
+        );
+        return;
+      }
     }
 
     const formDataToSend1 = new FormData();
-      formDataToSend1.append("beadingCarId", beadingCarId);
-      formDataToSend1.append("doctype", "Interior");
-      formDataToSend1.append("subtype", subtype);
-      formDataToSend1.append("comment", finalComment); // ✅ changed here
-      formDataToSend1.append("documentType", "InspectionReport");
-      formDataToSend1.append("doc", "");
+    formDataToSend1.append("beadingCarId", beadingCarId);
+    formDataToSend1.append("doctype", "Interior");
+    formDataToSend1.append("subtype", subtype);
+    formDataToSend1.append("comment", finalComment);
+    formDataToSend1.append("documentType", "InspectionReport");
+    formDataToSend1.append("doc", "");
 
-      try {
-        const res = await addBiddingCarWithoutImage({ formDataToSend1 });
-        refetch();
+    try {
+      const res = await addBiddingCarWithoutImage({ formDataToSend1 });
+      refetch();
 
-        if (res.data?.message === "success") {
-          toast.success("Data Uploaded", { autoClose: 500 });
-          setLables("");
-          setSelectfiled("");
-        } else {
-          toast.error("Data Upload failed", { autoClose: 500 });
-        }
-      } catch (error) {
-        toast.error("Data not Uploaded", { autoClose: 500 });
+      if (res.data?.message === "success") {
+        toast.success("Data Uploaded", { autoClose: 500 });
+        setLables("");
+        setSelectfiled("");
+      } else {
+        toast.error("Data Upload failed", { autoClose: 500 });
       }
+    } catch (error) {
+      toast.error("Data not Uploaded", { autoClose: 500 });
+    }
   };
-
-  // const handleCaptureImage = (imageUrl) => {
-  //   setSelectedImage(imageUrl);
-  //   setCaptureModalOpen(false); // Close the camera modal after capturing the image
-  // };
 
   const handleCameraModal = (key) => {
     setCaptureModalOpen(true);
@@ -252,13 +306,15 @@ const Interior = ({ setCheckstep }) => {
           }));
           break;
         case "InstrumentCluster":
-          setFormData((prev) => ({ ...prev, InstrumentCluster: item.comment }));
+          setFormData((prev) => ({
+            ...prev,
+            InstrumentCluster: item.comment,
+          }));
           setUploadedImages((prev) => ({
             ...prev,
             InstrumentClusters: item.documentLink,
           }));
           break;
-
         case "ReverseCameraSensor":
           setFormData((prev) => ({
             ...prev,
@@ -269,7 +325,6 @@ const Interior = ({ setCheckstep }) => {
             ReverseCameraSensors: item.documentLink,
           }));
           break;
-
         case "SeatCover":
           setFormData((prev) => ({ ...prev, SeatCover: item.comment }));
           setUploadedImages((prev) => ({
@@ -277,12 +332,12 @@ const Interior = ({ setCheckstep }) => {
             SeatCover: item.documentLink,
           }));
           break;
-
         default:
           break;
       }
     });
   }, [data]);
+
   if (
     formData.LeatherSeat.trim() !== "" &&
     formData.Odometer.trim() !== "" &&
@@ -294,10 +349,6 @@ const Interior = ({ setCheckstep }) => {
     setCheckstep(false);
   }
 
-  // const handleImageClick = (image) => {
-  //   setSelectedImage(image);
-  //   setOpenModal(true);
-  // };
   const fileInputRef = useRef(null);
 
   const handleCaptureImage = () => {
@@ -306,17 +357,49 @@ const Interior = ({ setCheckstep }) => {
     }
   };
 
+  // ─── handleImageClick (with 50% compression) ────────────────────────────────
   const handleImageClick = async (event) => {
-    // Handle the image upload here
+    // If called with a string (image URL preview click), do nothing
+    if (typeof event === "string") return;
+
     const file = event.target.files[0];
+    if (!file) return;
+
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
+    // Generate a local preview URL and update uploadedImages so user sees it instantly
+    const previewURL = URL.createObjectURL(compressedFile);
+    if (lables) {
+      const labelToImageKey = {
+        LeatherSeat: "LeatherSeats",
+        Odometer: "Odometers",
+        CabinFloor: "CabinFloors",
+        Dashboard: "Dashboards",
+        InstrumentCluster: "InstrumentClusters",
+        ReverseCameraSensor: "ReverseCameraSensors",
+        SeatCover: "SeatCover",
+      };
+      const imageKey = labelToImageKey[lables];
+      if (imageKey) {
+        setUploadedImages((prev) => ({ ...prev, [imageKey]: previewURL }));
+      }
+    }
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
+    formDataToSend.append("image", compressedFile);
 
     let finalComment = selectfiled;
     if (lables === "ReverseCameraSensor" && selectfiled === "Other") {
       finalComment = formData.customReverseCameraSensor || "";
-      if (!finalComment.trim()) { toast.error("Please enter the custom value for Reverse Camera/Sensor before uploading"); return; }
+      if (!finalComment.trim()) {
+        toast.error(
+          "Please enter the custom value for Reverse Camera/Sensor before uploading"
+        );
+        return;
+      }
     }
+
     const inspectionData = {
       documentType: "InspectionReport",
       beadingCarId: beadingCarId,
@@ -336,16 +419,16 @@ const Interior = ({ setCheckstep }) => {
         toast.error("Data Upload failed", { autoClose: 500 });
       }
     } catch (error) {
-      // console.error('Error uploading the file:', error);
       toast.error("Data not Uploaded", { autoClose: 500 });
     }
   };
+  // ────────────────────────────────────────────────────────────────────────────
 
   const handleReset = (fieldName) => {
-    setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
-    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null })); // Reset corresponding uploaded image
-    setLables(""); // Clear labels
-    setSelectfiled(""); // Clear selected field
+    setFormData((prev) => ({ ...prev, [fieldName]: "" }));
+    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null }));
+    setLables("");
+    setSelectfiled("");
   };
 
   return (
@@ -354,6 +437,8 @@ const Interior = ({ setCheckstep }) => {
         Interior
       </Typography>
       <Grid container spacing={3}>
+
+        {/* Leather Seat */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Leather Seat</InputLabel>
@@ -379,7 +464,7 @@ const Interior = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-              htmlFor="upload-MusicSystems"
+              htmlFor="upload-LeatherSeat"
               onClick={handleCaptureImage}
               className="cursor-pointer flex items-center"
             >
@@ -390,8 +475,6 @@ const Interior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("LeatherSeat")}
@@ -408,11 +491,11 @@ const Interior = ({ setCheckstep }) => {
               src={uploadedImages.LeatherSeats}
               alt="Uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.LeatherSeats)}
             />
           )}
         </Grid>
 
+        {/* Odometer */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Odometer</InputLabel>
@@ -438,7 +521,7 @@ const Interior = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-              htmlFor="upload-MusicSystems"
+              htmlFor="upload-Odometer"
               onClick={handleCaptureImage}
               className="cursor-pointer flex items-center"
             >
@@ -467,11 +550,11 @@ const Interior = ({ setCheckstep }) => {
               src={uploadedImages.Odometers}
               alt="Uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.Odometers)}
             />
           )}
         </Grid>
 
+        {/* Cabin Floor */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Cabin Floor</InputLabel>
@@ -482,13 +565,8 @@ const Interior = ({ setCheckstep }) => {
               onChange={handleChange}
             >
               <MenuItem value="Ok">Ok</MenuItem>
-              {/* <MenuItem value="Repainted">Repainted</MenuItem> */}
               <MenuItem value="Dented">Dented</MenuItem>
-              {/* <MenuItem value="Scratched">Scratched</MenuItem> */}
               <MenuItem value="Rusted">Rusted</MenuItem>
-
-              {/* <MenuItem value="Repaired">Repaired</MenuItem>
-              <MenuItem value="Damaged">Damaged</MenuItem> */}
             </Select>
           </FormControl>
           <div className="flex gap-5">
@@ -502,7 +580,7 @@ const Interior = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-              htmlFor="upload-MusicSystems"
+              htmlFor="upload-CabinFloor"
               onClick={handleCaptureImage}
               className="cursor-pointer flex items-center"
             >
@@ -513,8 +591,6 @@ const Interior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("CabinFloor")}
@@ -531,11 +607,11 @@ const Interior = ({ setCheckstep }) => {
               src={uploadedImages.CabinFloors}
               alt="Uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.CabinFloors)}
             />
           )}
         </Grid>
 
+        {/* Dashboard */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Dashboard</InputLabel>
@@ -565,7 +641,7 @@ const Interior = ({ setCheckstep }) => {
               Submit Without image
             </Button>
             <label
-              htmlFor="upload-MusicSystems"
+              htmlFor="upload-Dashboard"
               onClick={handleCaptureImage}
               className="cursor-pointer flex items-center"
             >
@@ -594,11 +670,11 @@ const Interior = ({ setCheckstep }) => {
               src={uploadedImages.Dashboards}
               alt="Uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.Dashboards)}
             />
           )}
         </Grid>
 
+        {/* Instrument Cluster */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Instrument Cluster</InputLabel>
@@ -654,13 +730,11 @@ const Interior = ({ setCheckstep }) => {
               src={uploadedImages.InstrumentClusters}
               alt="Uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() =>
-                handleImageClick(uploadedImages.InstrumentClusters)
-              }
             />
           )}
         </Grid>
 
+        {/* Reverse Camera/Sensor */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Reverse Camera/Sensor</InputLabel>
@@ -669,9 +743,7 @@ const Interior = ({ setCheckstep }) => {
               name="ReverseCameraSensor"
               value={formData.ReverseCameraSensor}
               onChange={handleChange}
-              MenuProps={{
-                disableAutoFocusItem: true,
-              }}
+              MenuProps={{ disableAutoFocusItem: true }}
             >
               <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Not Working">Not Working</MenuItem>
@@ -709,7 +781,6 @@ const Interior = ({ setCheckstep }) => {
             >
               Submit Without image
             </Button>
-
             <label
               htmlFor="upload-ReverseCameraSensor"
               onClick={handleCaptureImage}
@@ -722,10 +793,7 @@ const Interior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
-
             <Button
               onClick={() => handleReset("ReverseCameraSensor")}
               size="small"
@@ -739,16 +807,14 @@ const Interior = ({ setCheckstep }) => {
 
           {uploadedImages.ReverseCameraSensors && (
             <img
-              src={uploadedImages.ReverseCameraSensor}
+              src={uploadedImages.ReverseCameraSensors}
               alt="Uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() =>
-                handleImageClick(uploadedImages.ReverseCameraSensors)
-              }
             />
           )}
         </Grid>
 
+        {/* Seat Cover */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Seat Cover</InputLabel>
@@ -786,8 +852,6 @@ const Interior = ({ setCheckstep }) => {
                 ref={fileInputRef}
                 onChange={handleImageClick}
               />
-              {/* <CloudUploadIcon />
-              <span className="ml-2">Upload Image</span> */}
             </label>
             <Button
               onClick={() => handleReset("SeatCover")}
@@ -804,17 +868,16 @@ const Interior = ({ setCheckstep }) => {
               src={uploadedImages.SeatCover}
               alt="Uploaded"
               style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.SeatCover)}
             />
           )}
         </Grid>
+
       </Grid>
 
       {/* Modal for displaying clicked image */}
       <Modal
         open={captureModalOpen}
         onClose={() => setCaptureModalOpen(false)}
-        // className={classes.modal}
       >
         <div className={classes.paper}>
           <UploadImage4

@@ -47,6 +47,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// ─── Image Compression Helper ────────────────────────────────────────────────
+// Compresses an image File to the given quality (0.0 – 1.0).
+// 0.5 = 50% quality → typically reduces a 30 MB image to 2–5 MB.
+const compressImage = (file, quality = 0.5) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            const compressedFile = new File([blob], file.name, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            // ✅ View compression result in browser DevTools → Console tab
+            console.log(
+              `🗜️ Compressed: ${file.name} | Original: ${(file.size / 1024 / 1024).toFixed(2)} MB → Compressed: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`
+            );
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const Ac = ({ setCheckstep }) => {
   const classes = useStyles();
   const { beadingCarId } = useParams();
@@ -88,6 +125,33 @@ const Ac = ({ setCheckstep }) => {
 
   const userRole = token ? jwtDecodes?.authorities[0] : null;
 
+  useEffect(() => {
+    // Pre-fill form data and uploaded images based on API data
+    data?.object.map((item) => {
+      switch (item.subtype) {
+        case "ACCooling":
+          setFormData((prev) => ({ ...prev, ACCooling: item.comment }));
+          setUploadedImages((prev) => ({ ...prev, ACCoolings: item.documentLink }));
+          break;
+        case "Heater":
+          setFormData((prev) => ({ ...prev, Heater: item.comment }));
+          setUploadedImages((prev) => ({ ...prev, Heaters: item.documentLink }));
+          break;
+        case "ClimateControlAC":
+          setFormData((prev) => ({ ...prev, ClimateControlAC: item.comment }));
+          setUploadedImages((prev) => ({ ...prev, ClimateControlACs: item.documentLink }));
+          break;
+        case "AcVent":
+          setFormData((prev) => ({ ...prev, AcVent: item.comment }));
+          setUploadedImages((prev) => ({ ...prev, AcVents: item.documentLink }));
+          break;
+        default:
+          break;
+      }
+    });
+  }, [data]);
+
+  // ─── handleFileChange (with 50% compression) ────────────────────────────────
   const handleFileChange = async (event, fieldName, imgPreview = "") => {
     let file;
     let imageData;
@@ -96,18 +160,21 @@ const Ac = ({ setCheckstep }) => {
       imageData = file;
     } else {
       file = event.target.files[0];
-    }  
+    }
 
     if (!file) return;
 
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
+    formDataToSend.append("image", compressedFile);
 
     const reader = new FileReader();
     reader.onload = async () => {
       imageData = reader.result;
+      setFormData({ ...formData, [fieldName]: imageData });
 
-      setFormData({ ...formData, ["FourPowerWindowss"]: imageData });
       if (lables) {
         const inspectionData = {
           documentType: "Inspection Report",
@@ -119,10 +186,7 @@ const Ac = ({ setCheckstep }) => {
         };
 
         try {
-          const res = await inspectionReport({
-            inspectionData,
-            formDataToSend,
-          });
+          const res = await inspectionReport({ inspectionData, formDataToSend });
           refetch();
 
           if (res.data?.message === "success") {
@@ -133,15 +197,16 @@ const Ac = ({ setCheckstep }) => {
             toast.error("Data Upload failed", { autoClose: 500 });
           }
         } catch (error) {
-          // console.error('Error uploading the file:', error);
           alert("Data not Uploaded");
         }
       } else {
         toast.error("Input is required", { autoClose: 2000 });
       }
     };
-    reader.readAsDataURL(file);
+    // Read the compressed file for preview
+    reader.readAsDataURL(compressedFile);
   };
+  // ────────────────────────────────────────────────────────────────────────────
 
   const handleSubmitWithoutImage = async () => {
     if (lables) {
@@ -171,49 +236,6 @@ const Ac = ({ setCheckstep }) => {
     }
   };
 
-  // const handleCaptureImage = (imageUrl) => {
-  //   setSelectedImage(imageUrl);
-  //   setCaptureModalOpen(false); // Close the camera modal after capturing the image
-  // };
-
-  useEffect(() => {
-    // Pre-fill form data and uploaded images based on API data
-    data?.object.map((item) => {
-      switch (item.subtype) {
-        case "ACCooling":
-          setFormData((prev) => ({ ...prev, ACCooling: item.comment }));
-          setUploadedImages((prev) => ({
-            ...prev,
-            ACCoolings: item.documentLink,
-          }));
-          break;
-        case "Heater":
-          setFormData((prev) => ({ ...prev, Heater: item.comment }));
-          setUploadedImages((prev) => ({
-            ...prev,
-            Heaters: item.documentLink,
-          }));
-          break;
-        case "ClimateControlAC":
-          setFormData((prev) => ({ ...prev, ClimateControlAC: item.comment }));
-          setUploadedImages((prev) => ({
-            ...prev,
-            ClimateControlACs: item.documentLink,
-          }));
-          break;
-        case "AcVent":
-          setFormData((prev) => ({ ...prev, AcVent: item.comment }));
-          setUploadedImages((prev) => ({
-            ...prev,
-            AcVents: item.documentLink,
-          }));
-          break;
-        default:
-          break;
-      }
-    });
-  }, [data]);
-
   if (
     formData.ACCooling.length > 0 &&
     formData.AcVent.length > 0 &&
@@ -221,7 +243,6 @@ const Ac = ({ setCheckstep }) => {
     formData.Heater.length > 0
   ) {
     setCheckstep(true);
-    console.log("working");
   } else {
     setCheckstep(false);
   }
@@ -229,17 +250,11 @@ const Ac = ({ setCheckstep }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-
     if (value.length > 0) {
       setLables(name);
       setSelectfiled(value);
     }
   };
-
-  // const handleImageClick = (image) => {
-  //   setSelectedImage(image);
-  //   setOpenModal(true);
-  // };
 
   const fileInputRef = useRef(null);
 
@@ -249,11 +264,34 @@ const Ac = ({ setCheckstep }) => {
     }
   };
 
+  // ─── handleImageClick (with 50% compression + preview) ──────────────────────
   const handleImageClick = async (event) => {
-    // Handle the image upload here
+    // If called with a string (image URL preview click), do nothing
+    if (typeof event === "string") return;
+
     const file = event.target.files[0];
+    if (!file) return;
+
+    // Compress image to 50% quality before uploading
+    const compressedFile = await compressImage(file, 0.5);
+
+    // Generate a local preview URL and map lables → uploadedImages key
+    const previewURL = URL.createObjectURL(compressedFile);
+    if (lables) {
+      const labelToImageKey = {
+        ACCooling: "ACCoolings",
+        Heater: "Heaters",
+        ClimateControlAC: "ClimateControlACs",
+        AcVent: "AcVents",
+      };
+      const imageKey = labelToImageKey[lables];
+      if (imageKey) {
+        setUploadedImages((prev) => ({ ...prev, [imageKey]: previewURL }));
+      }
+    }
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file);
+    formDataToSend.append("image", compressedFile);
 
     const inspectionData = {
       documentType: "InspectionReport",
@@ -274,16 +312,16 @@ const Ac = ({ setCheckstep }) => {
         toast.error("Data Upload failed", { autoClose: 500 });
       }
     } catch (error) {
-      // console.error('Error uploading the file:', error);
       toast.error("Data not Uploaded", { autoClose: 500 });
     }
   };
+  // ────────────────────────────────────────────────────────────────────────────
 
   const handleReset = (fieldName) => {
-    setFormData((prev) => ({ ...prev, [fieldName]: "" })); // Reset form field value
-    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null })); // Reset corresponding uploaded image
-    setLables(""); // Clear labels
-    setSelectfiled(""); // Clear selected field
+    setFormData((prev) => ({ ...prev, [fieldName]: "" }));
+    setUploadedImages((prev) => ({ ...prev, [fieldName + "s"]: null }));
+    setLables("");
+    setSelectfiled("");
   };
 
   const handleCameraModal = (key) => {
@@ -297,6 +335,8 @@ const Ac = ({ setCheckstep }) => {
         AC
       </Typography>
       <Grid container spacing={3}>
+
+        {/* AC Cooling */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>AC Cooling</InputLabel>
@@ -308,56 +348,28 @@ const Ac = ({ setCheckstep }) => {
             >
               <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Misfiring">Ineffective</MenuItem>
-              <MenuItem value="Long cranking due to weak Compression">
-                Not Working
-              </MenuItem>
+              <MenuItem value="Long cranking due to weak Compression">Not Working</MenuItem>
             </Select>
           </FormControl>
           <div className="flex gap-5">
-            <Button
-              onClick={handleSubmitWithoutImage}
-              size="small"
-              variant="contained"
-              color="success"
-              style={{ marginTop: "10px" }}
-            >
+            <Button onClick={handleSubmitWithoutImage} size="small" variant="contained" color="success" style={{ marginTop: "10px" }}>
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
-            <Button
-              onClick={() => handleReset("ACCooling")}
-              size="small"
-              variant="outlined"
-              color="secondary"
-              style={{ marginTop: "10px" }}
-            >
+            <label htmlFor="upload-ACCooling" onClick={handleCaptureImage} className="cursor-pointer flex items-center">
+              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageClick} />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button onClick={() => handleReset("ACCooling")} size="small" variant="outlined" color="secondary" style={{ marginTop: "10px" }}>
               Reset
             </Button>
           </div>
           {uploadedImages.ACCoolings && (
-            <img
-              src={uploadedImages.ACCoolings}
-              alt="Uploaded"
-              style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.ACCoolings)}
-            />
+            <img src={uploadedImages.ACCoolings} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
           )}
         </Grid>
 
+        {/* Heater */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Heater</InputLabel>
@@ -369,56 +381,28 @@ const Ac = ({ setCheckstep }) => {
             >
               <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Misfiring">Ineffective</MenuItem>
-              <MenuItem value="Long cranking due to weak Compression">
-                Not Working
-              </MenuItem>
+              <MenuItem value="Long cranking due to weak Compression">Not Working</MenuItem>
             </Select>
           </FormControl>
           <div className="flex gap-5">
-            <Button
-              onClick={handleSubmitWithoutImage}
-              size="small"
-              variant="contained"
-              color="success"
-              style={{ marginTop: "10px" }}
-            >
+            <Button onClick={handleSubmitWithoutImage} size="small" variant="contained" color="success" style={{ marginTop: "10px" }}>
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
-            <Button
-              onClick={() => handleReset("Heater")}
-              size="small"
-              variant="outlined"
-              color="secondary"
-              style={{ marginTop: "10px" }}
-            >
+            <label htmlFor="upload-Heater" onClick={handleCaptureImage} className="cursor-pointer flex items-center">
+              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageClick} />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button onClick={() => handleReset("Heater")} size="small" variant="outlined" color="secondary" style={{ marginTop: "10px" }}>
               Reset
             </Button>
           </div>
           {uploadedImages.Heaters && (
-            <img
-              src={uploadedImages.Heaters}
-              alt="Uploaded"
-              style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.Heaters)}
-            />
+            <img src={uploadedImages.Heaters} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
           )}
         </Grid>
 
+        {/* Climate Control AC */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Climate Control AC</InputLabel>
@@ -430,56 +414,28 @@ const Ac = ({ setCheckstep }) => {
             >
               <MenuItem value="Ok">Ok</MenuItem>
               <MenuItem value="Misfiring">Ineffective</MenuItem>
-              <MenuItem value="Long cranking due to weak Compression">
-                Not Working
-              </MenuItem>
+              <MenuItem value="Long cranking due to weak Compression">Not Working</MenuItem>
             </Select>
           </FormControl>
           <div className="flex gap-5">
-            <Button
-              onClick={handleSubmitWithoutImage}
-              size="small"
-              variant="contained"
-              color="success"
-              style={{ marginTop: "10px" }}
-            >
+            <Button onClick={handleSubmitWithoutImage} size="small" variant="contained" color="success" style={{ marginTop: "10px" }}>
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
-            <Button
-              onClick={() => handleReset("ClimateControlAC")}
-              size="small"
-              variant="outlined"
-              color="secondary"
-              style={{ marginTop: "10px" }}
-            >
+            <label htmlFor="upload-ClimateControlAC" onClick={handleCaptureImage} className="cursor-pointer flex items-center">
+              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageClick} />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button onClick={() => handleReset("ClimateControlAC")} size="small" variant="outlined" color="secondary" style={{ marginTop: "10px" }}>
               Reset
             </Button>
           </div>
           {uploadedImages.ClimateControlACs && (
-            <img
-              src={uploadedImages.ClimateControlACs}
-              alt="Uploaded"
-              style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.ClimateControlACs)}
-            />
+            <img src={uploadedImages.ClimateControlACs} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
           )}
         </Grid>
 
+        {/* AC Vent */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth required>
             <InputLabel>Ac Vent</InputLabel>
@@ -494,57 +450,27 @@ const Ac = ({ setCheckstep }) => {
             </Select>
           </FormControl>
           <div className="flex gap-5">
-            <Button
-              onClick={handleSubmitWithoutImage}
-              size="small"
-              variant="contained"
-              color="success"
-              style={{ marginTop: "10px" }}
-            >
+            <Button onClick={handleSubmitWithoutImage} size="small" variant="contained" color="success" style={{ marginTop: "10px" }}>
               Submit Without image
             </Button>
-            <label
-                htmlFor="upload-MusicSystems"
-                onClick={handleCaptureImage}
-                className="cursor-pointer flex items-center"
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleImageClick}
-                />
-                <CloudUploadIcon />
-                <span className="ml-2">Upload Image</span>
-              </label>
-            <Button
-              onClick={() => handleReset("AcVent")}
-              size="small"
-              variant="outlined"
-              color="secondary"
-              style={{ marginTop: "10px" }}
-            >
+            <label htmlFor="upload-AcVent" onClick={handleCaptureImage} className="cursor-pointer flex items-center">
+              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageClick} />
+              <CloudUploadIcon />
+              <span className="ml-2">Upload Image</span>
+            </label>
+            <Button onClick={() => handleReset("AcVent")} size="small" variant="outlined" color="secondary" style={{ marginTop: "10px" }}>
               Reset
             </Button>
           </div>
           {uploadedImages.AcVents && (
-            <img
-              src={uploadedImages.AcVents}
-              alt="Uploaded"
-              style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }}
-              onClick={() => handleImageClick(uploadedImages.AcVents)}
-            />
+            <img src={uploadedImages.AcVents} alt="Uploaded" style={{ maxWidth: "20%", marginTop: "10px", cursor: "pointer" }} />
           )}
         </Grid>
+
       </Grid>
 
-      {/* Modal for displaying clicked image */}
-      <Modal
-        open={captureModalOpen}
-        onClose={() => setCaptureModalOpen(false)}
-        // className={classes.modal}
-      >
+      {/* Modal for camera capture */}
+      <Modal open={captureModalOpen} onClose={() => setCaptureModalOpen(false)}>
         <div className={classes.paper}>
           <UploadImage4
             isOpen={captureModalOpen}
@@ -555,15 +481,6 @@ const Ac = ({ setCheckstep }) => {
           />
         </div>
       </Modal>
-
-      {/* <div className="flex justify-between mt-10 px-8">
-        <Button variant="contained" color="success">
-          Previous
-        </Button>
-        <Button variant="contained" color="success">
-          Next
-        </Button>
-      </div> */}
     </div>
   );
 };
